@@ -1,18 +1,36 @@
-version: "3.8"
+version: '3'
+
 services:
-  frontend:
-    build: ./frontend
-    ports:
-      - "3000:3000"
-  
   backend:
-    build: ./backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    volumes:
+      - ./backend:/app
     ports:
       - "8080:8080"
-  
+    depends_on:
+      - db
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    volumes:
+      - ./frontend:/app
+    ports:
+      - "3000:3000"
+
   db:
     image: postgres:13
     environment:
-      POSTGRES_DB: mydatabase
+      POSTGRES_DB: lifelog
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
