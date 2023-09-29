@@ -1,7 +1,7 @@
 
 const submit = async(text: string) =>{
     try {
-        const response = await fetch('https://your-api-endpoint.com/submit', {
+        const response = await fetch('http://localhost:8080/api/submit', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
