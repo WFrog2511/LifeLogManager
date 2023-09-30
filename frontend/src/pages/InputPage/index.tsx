@@ -2,20 +2,17 @@ import React, { useState } from 'react';
 import {
     TextField, 
     Button,
-    Checkbox,
-    FormControlLabel
 } from '@mui/material';
 import submit from '../../services/submit';
 import styled from '@emotion/styled';
 
-import { DiaryEntry } from '../../components/DiaryEntry';
-import { PetHealthEntry } from '../../components/PetHealthEntry';
-import { ArtworkUpload } from '../../components/ArtworkUpload';
-import { ExpenseTracker } from '../../components/ExpenseTracker';
-import { HealthRecord } from '../../components/HealthRecord';
+import { DiaryEntry, DiaryEntryData } from '../../components/DiaryEntry';
+import { PetHealthEntry, PetHealthEntryData } from '../../components/PetHealthEntry';
+import { ArtworkUpload, ArtworkUploadData } from '../../components/ArtworkUpload';
+import { ExpenseTracker, ExpenseTrackerData } from '../../components/ExpenseTracker';
+import { HealthRecord, HealthRecordData } from '../../components/HealthRecord';
 
 const InputPageWrapper = styled.div`
-    // box-sizing: border-box;
     display: flex;
     flex-direction: column;
     max-width: 500px;
@@ -26,21 +23,55 @@ const InputPageWrapper = styled.div`
 `;
 
 const ComponentWrapper = styled.div`
-    // box-sizing: border-box;
     padding: 20px;
 `;
 
+
+export type InputData = {
+    date: string;       // 日付
+
+    diary:    DiaryEntryData;       // 日誌データ
+    health:   HealthRecordData;     // 健康データ
+    pet:      PetHealthEntryData;   // ペットの健康データ
+    artwork:  ArtworkUploadData;    // 作品記録のデータ
+    expense:  ExpenseTrackerData;   // 家計簿のデータ
+};
+
 const InputPage: React.FC = () => {
-    const [date, setDate] = useState(new Date().toISOString().substring(0, 10));
+    const [inputData, setInputData] = useState<InputData>(
+        {
+            date:   new Date().toISOString().substring(0, 10),
+            diary: {
+                events: "",
+                insights: "",
+                routineTasks: {}
+            },
+            health: {
+                bodyMarks: [],
+                mealPhotos:[],
+            },
+            pet: {
+                notes: "",
+                photos:[],
+            },
+            artwork: {
+                files: [],
+                links:  []
+            },
+            expense: {
+                expenseItems: [],
+            }
+        }
+    );
     
     const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setDate(event.target.value);
+        setInputData( {...inputData, date: event.target.value} );
     };
 
     /**登録ボタンを押した際の処理 */
     const handleSubmit = () => {
-        // console.log(date, entry);
-        // submit(entry);
+        console.log(inputData);
+        submit(inputData);
     };
 
     return (
@@ -48,18 +79,18 @@ const InputPage: React.FC = () => {
             <TextField
                 label="日付"
                 type="date"
-                value={date}
+                value={inputData.date}
                 onChange={handleDateChange}
                 InputLabelProps={{
                 shrink: true,
                 }}
             />
 
-            <ComponentWrapper>  <DiaryEntry/>       </ComponentWrapper>
-            <ComponentWrapper>  <HealthRecord/>     </ComponentWrapper>
-            <ComponentWrapper>  <PetHealthEntry/>   </ComponentWrapper>
-            <ComponentWrapper>  <ArtworkUpload/>    </ComponentWrapper>
-            <ComponentWrapper>  <ExpenseTracker/>   </ComponentWrapper>
+            <ComponentWrapper>  <DiaryEntry     setInputData={(val) => setInputData({...inputData, diary: val})}/>      </ComponentWrapper>
+            <ComponentWrapper>  <HealthRecord   setInputData={(val) => setInputData({...inputData, health: val})}/>     </ComponentWrapper>
+            <ComponentWrapper>  <PetHealthEntry setInputData={(val) => setInputData({...inputData, pet: val})}/>        </ComponentWrapper>
+            <ComponentWrapper>  <ArtworkUpload  setInputData={(val) => setInputData({...inputData, artwork: val})}/>    </ComponentWrapper>
+            <ComponentWrapper>  <ExpenseTracker setInputData={(val) => setInputData({...inputData, expense: val})}/>    </ComponentWrapper>
             
             <Button variant="contained" color="primary" onClick={handleSubmit}>
                 登録

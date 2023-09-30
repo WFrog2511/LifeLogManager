@@ -1,12 +1,13 @@
+import { InputData } from "../pages/InputPage";
 
-const submit = async(text: string) =>{
+const submit = async(data: InputData) =>{
     try {
         const response = await fetch('http://localhost:8080/api/submit', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ text }),
+            body: JSON.stringify({ data }),
         });
   
         if (response.ok) {

@@ -17,21 +17,27 @@ const Title = styled.h2`
   	margin-bottom: 20px;
 `;
 
-export const ArtworkUpload: React.FC = () => {
-  	const [files, setFiles] = useState<FileList | null>(null);
+export type ArtworkUploadData = {
+	files:	Array<File>;    // アップロードされた作品のファイルリスト
+	links:  Array<string>;  // YoutubeやGitHubなどのリンクのリスト
+};
+type ArtworkUploadProps = {
+	setInputData: (x: ArtworkUploadData) => void; 
+}
+
+//TODO: Linkも入力できるようにする
+export const ArtworkUpload: React.FC<ArtworkUploadProps> = (props: ArtworkUploadProps) => {
+	const [inputData, setInputData] = useState<ArtworkUploadData>({
+		files: [],
+		links: []
+	});
 
 	const handleFilesChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const files = event.target.files;
 		if (files && files.length > 0) {
-			setFiles(files);
-		}
-	};
-
-	const handleSubmit = () => {
-		// 作品アップロードの送信ロジック
-		if (files) {
-			console.log(files);
-			// ファイルをバックエンドにアップロードするロジックをここに追加
+			const newData: ArtworkUploadData = {...inputData, files: Array.from(files)};
+			setInputData(newData);
+			props.setInputData(newData);
 		}
 	};
 
@@ -51,9 +57,6 @@ export const ArtworkUpload: React.FC = () => {
 					Upload Artwork Files
 				</Button>
 			</label>
-			<Button variant="contained" color="primary" onClick={handleSubmit} disabled={!files}>
-				Submit
-			</Button>
 		</ArtworkUploadWrapper>
 	);
 };

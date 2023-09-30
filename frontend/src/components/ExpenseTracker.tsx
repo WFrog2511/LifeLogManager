@@ -18,17 +18,28 @@ const Title = styled.h2`
     margin-bottom: 20px;
 `;
 
+type IncomeOrExpense = 'income' | 'expense';
 type ExpenseItem = {
     description: string;
     amount: number;
-    type: 'income' | 'expense';
+    type: IncomeOrExpense;
+};
+export type ExpenseTrackerData = {
+    expenseItems: Array<ExpenseItem>,
 };
 
-export const ExpenseTracker: React.FC = () => {
+type ExpenseTrackerProps = {
+    setInputData: (x: ExpenseTrackerData) => void
+};
+
+export const ExpenseTracker: React.FC<ExpenseTrackerProps> = (props: ExpenseTrackerProps) => {
+    const [inputData, setInputData] = useState<ExpenseTrackerData>({
+        expenseItems: [],
+    });
+    
     const [description, setDescription] = useState('');
     const [amount, setAmount] = useState('');
-    const [type, setType] = useState<'income' | 'expense'>('expense');
-    const [items, setItems] = useState<ExpenseItem[]>([]);
+    const [type, setType] = useState<IncomeOrExpense>('expense');
 
     const handleDescriptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setDescription(event.target.value);
@@ -39,21 +50,27 @@ export const ExpenseTracker: React.FC = () => {
     };
 
     const handleTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setType(event.target.value as 'income' | 'expense');
+        setType(event.target.value as IncomeOrExpense);
     };
 
     const handleAddItem = () => {
         if (description && amount) {
-            setItems([...items, { description, amount: parseFloat(amount), type }]);
+            const newItem: ExpenseItem = { description, amount: parseFloat(amount), type };
+            const newData: ExpenseTrackerData = {...inputData, expenseItems: [...inputData.expenseItems, newItem]};
+            setInputData(newData);
+            props.setInputData(newData);
+            
             setDescription('');
             setAmount('');
         }
     };
 
     const handleDeleteItem = (index: number) => {
-        const newItems = [...items];
+        const newItems = [...inputData.expenseItems];
         newItems.splice(index, 1);
-        setItems(newItems);
+        const newData = {...inputData, expenseItems: newItems}
+        setInputData(newData);
+        props.setInputData(newData);
     };
 
     return (
@@ -91,11 +108,11 @@ export const ExpenseTracker: React.FC = () => {
                 追加
             </Button>
             <List>
-                {items.map((item, index) => (
+                {inputData.expenseItems.map((item, index) => (
                 <ListItem key={index}>
                     <ListItemText
                         primary={item.description}
-                        secondary={`${item.type === 'income' ? '+' : '-'}$${item.amount}`}
+                        secondary={`${item.type === 'income' ? '+' : '-'}￥${item.amount}`}
                     />
                     <IconButton edge="end" aria-label="delete" onClick={() => handleDeleteItem(index)}>
                         <DeleteIcon />

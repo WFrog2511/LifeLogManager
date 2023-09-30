@@ -5,6 +5,7 @@ import {
 	FormControlLabel,
 } from '@mui/material';
 import styled from '@emotion/styled';
+import { Insights } from '@mui/icons-material';
 
 const DiaryEntryWrapper = styled.div`
 	display: flex;
@@ -21,24 +22,42 @@ const Title = styled.h2`
   	margin-bottom: 20px;
 `;
 
-export const DiaryEntry: React.FC = () => {
-	const [entry, setEntry] = useState('');
-	const [insights, setInsights] = useState('');
-    const [checkboxes, setCheckboxes] = useState<{ [key: string]: boolean }>({});
+export type DiaryEntryData = {
+	events:         string;                     // 今日の出来事
+	insights:       string;                     // 今日の知見
+	routineTasks:   Record<string, boolean>;    // 今日やったこと
+}
+type DiaryEntryProps = {
+	setInputData: (x: DiaryEntryData) => void; 
+}
+
+export const DiaryEntry: React.FC<DiaryEntryProps> = (props: DiaryEntryProps) => {
+	const [inputData, setInputData] = useState<DiaryEntryData>({
+		events: 		"",
+		insights: 		"",
+		routineTasks: 	{},
+	});
   
     const handleEntryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setEntry(event.target.value);
+		const newData: DiaryEntryData = {...inputData, events: event.target.value};
+		setInputData(newData);
+		props.setInputData(newData);
     };
 
 	const handleInsightsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setInsights(event.target.value);
+		const newData: DiaryEntryData = {...inputData, insights: event.target.value};
+		setInputData(newData);
+		props.setInputData(newData);
     };
-    
+
     const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setCheckboxes({
-            ...checkboxes,
+		const newValue ={
+            ...inputData.routineTasks,
             [event.target.name]: event.target.checked,
-        });
+        };
+        const newData: DiaryEntryData = {...inputData, routineTasks: newValue};
+		setInputData(newData);
+		props.setInputData(newData);
     };
 
 	return (
@@ -48,7 +67,7 @@ export const DiaryEntry: React.FC = () => {
             <FormControlLabel
                 control={
                 <Checkbox
-                    checked={checkboxes['ゲーム'] || false}
+                    checked={inputData.routineTasks['ゲーム'] || false}
                     onChange={handleCheckboxChange}
                     name="ゲーム"
                 />
@@ -59,7 +78,7 @@ export const DiaryEntry: React.FC = () => {
                 label="新しい知見"
                 multiline
                 rows={4}
-                value={insights}
+                value={inputData.insights}
                 onChange={handleInsightsChange}
                 variant="outlined"
                 margin="normal"
@@ -68,7 +87,7 @@ export const DiaryEntry: React.FC = () => {
                 label="今日の出来事"
                 multiline
                 rows={6}
-                value={entry}
+                value={inputData.events}
                 onChange={handleEntryChange}
                 variant="outlined"
                 margin="normal"

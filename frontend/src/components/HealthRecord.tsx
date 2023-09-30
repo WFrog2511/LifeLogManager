@@ -35,11 +35,27 @@ const Marker = styled.div`
     cursor: pointer;
 `;
 
+/** 体の異常点の座標 と 異常の情報(文字列) */
+type BodyMark = { 
+    x: number; 
+    y: number; 
+    note: string ;
+}
+export type HealthRecordData = {
+    bodyMarks:  Array<BodyMark>;    // 体の以上点(座標) と 状態(文字列)
+    mealPhotos: Array<File>;        // 食事の写真リスト
+}
+type HealthRecordProps = {
+	setInputData: (x: HealthRecordData) => void; 
+}
+
 // TODO: 起床時間/就寝時間 入力欄の実装
 // TODO: 睡眠時間を自動計算する機能の実装
-export const HealthRecord: React.FC = () => {
-    const [memo, setMemo] = useState('');
-    const [markers, setMarkers] = useState<{x: number, y: number}[]>([]);
+export const HealthRecord: React.FC<HealthRecordProps> = (props: HealthRecordProps) => {
+    const [inputData, setInputData] = useState<HealthRecordData>({
+		bodyMarks: [],
+        mealPhotos:[],
+	});
     const imageWrapperRef = useRef<HTMLDivElement | null>(null);
 
     const handleImageClick = (event: React.MouseEvent) => {
@@ -48,23 +64,23 @@ export const HealthRecord: React.FC = () => {
         const y = event.clientY - rect.top;
 
         // 既に同じ位置にマーカーが存在するか確認
-        const existingMarkerIndex = markers.findIndex(marker =>
+        const existingMarkerIndex = inputData.bodyMarks.findIndex(marker =>
             Math.abs(marker.x - x) < 10 && Math.abs(marker.y - y) < 10
         );
 
+        let newData: HealthRecordData;
         if (existingMarkerIndex !== -1) {
             // 同じ位置にマーカーが存在する場合は、そのマーカーを削除
-            const newMarkers = markers.slice();
+            const newMarkers = inputData.bodyMarks.slice();
             newMarkers.splice(existingMarkerIndex, 1);
-            setMarkers(newMarkers);
+            newData = {...inputData, bodyMarks: newMarkers};
         } else {
             // 新しいマーカーを追加
-            setMarkers([...markers, {x, y}]);
+            const newMarker: BodyMark = {x: x, y: y, note: ""};     // TODO: noteに文字列を入力できるようにする
+            newData = {...inputData, bodyMarks: [...inputData.bodyMarks, newMarker]};
         }
-    };
-
-    const handleMemoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setMemo(event.target.value);
+        setInputData(newData);
+        props.setInputData(newData);
     };
 
     return (
@@ -72,22 +88,13 @@ export const HealthRecord: React.FC = () => {
             <Title>健康記録</Title>
             <ImageWrapper ref={imageWrapperRef} onClick={handleImageClick}>
                 <Person style={{ width: '100%', height:'100%', position: 'absolute', top: 0, left: 0 }} />
-                {markers.map((marker, index) => (
+                {inputData.bodyMarks.map((marker, index) => (
                     <Marker
                     key={index}
                     style={{left: marker.x - 10, top: marker.y - 10}}
                     />
                 ))}
             </ImageWrapper>
-            <TextField
-                label="メモ"
-                multiline
-                rows={3}
-                value={memo}
-                onChange={handleMemoChange}
-                variant="outlined"
-                margin="normal"
-            />
         </HealthRecordWrapper>
     );
 };

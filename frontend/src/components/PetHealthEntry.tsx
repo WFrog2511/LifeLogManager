@@ -17,24 +17,33 @@ const Title = styled.h2`
   	margin-bottom: 20px;
 `;
 
-export const PetHealthEntry: React.FC = () => {
-	const [petMemo, setPetMemo] = useState('');
-	const [file, setFile] = useState<File | null>(null);
+export type PetHealthEntryData = {
+	notes:  string;         // ペットの様子を記述する文字列
+    photos: Array<File>;    // ペットの写真のファイルリスト
+}
+type PetHealthEntryProps = {
+	setInputData: (x: PetHealthEntryData) => void; 
+}
 
+export const PetHealthEntry: React.FC<PetHealthEntryProps> = (props: PetHealthEntryProps) => {
+	const [inputData, setInputData] = useState<PetHealthEntryData>({
+		notes: "",
+		photos: []
+	});
+	
 	const handlePetMemoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		setPetMemo(event.target.value);
+		const newData: PetHealthEntryData = {...inputData, notes: event.target.value};
+		setInputData(newData);
+		props.setInputData(newData);
 	};
 
 	const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const files = event.target.files;
 		if (files && files.length > 0) {
-			setFile(files[0]);
+			const newData: PetHealthEntryData = {...inputData, photos: Array.from(files)};
+			setInputData(newData);
+			props.setInputData(newData);
 		}
-	};
-
-	const handleSubmit = () => {
-		// ペットの健康状態エントリーの送信ロジック
-		console.log(petMemo, file);
 	};
 
 	return (
@@ -56,7 +65,7 @@ export const PetHealthEntry: React.FC = () => {
 				label="メモ"
 				multiline
 				rows={4}
-				value={petMemo}
+				value={inputData.notes}
 				onChange={handlePetMemoChange}
 				variant="outlined"
 				margin="normal"
