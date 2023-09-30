@@ -87,25 +87,30 @@ const InputPage: React.FC = () => {
 
     return (
         <InputPageWrapper>
-            <TextField
-                label="日付"
-                type="date"
-                value={inputData.date}
-                onChange={handleDateChange}
-                InputLabelProps={{
-                shrink: true,
-                }}
-            />
+            <ComponentWrapper>
+                <TextField
+                    label="日付"
+                    type="date"
+                    value={inputData.date}
+                    onChange={handleDateChange}
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
+                    fullWidth
+                />
+            </ComponentWrapper>
 
-            <ComponentWrapper>  <DiaryEntry     setInputData={(val) => setInputData({...inputData, diary: val})} taskList={taskList}/>  </ComponentWrapper>
+            <ComponentWrapper>  <DiaryEntry     setInputData={(val) => setInputData({...inputData, diary: val})} taskList={taskList} setTaskList={setTaskList}/>  </ComponentWrapper>
             <ComponentWrapper>  <HealthRecord   setInputData={(val) => setInputData({...inputData, health: val})}/>     </ComponentWrapper>
             <ComponentWrapper>  <PetHealthEntry setInputData={(val) => setInputData({...inputData, pet: val})}/>        </ComponentWrapper>
             <ComponentWrapper>  <ArtworkUpload  setInputData={(val) => setInputData({...inputData, artwork: val})}/>    </ComponentWrapper>
             <ComponentWrapper>  <ExpenseTracker setInputData={(val) => setInputData({...inputData, expense: val})}/>    </ComponentWrapper>
             
-            <Button variant="contained" color="primary" onClick={handleSubmit}>
-                登録
-            </Button>
+            <ComponentWrapper>
+                <Button variant="contained" color="primary" onClick={handleSubmit} fullWidth>
+                    登録
+                </Button>
+            </ComponentWrapper>
         </InputPageWrapper>
     );
 };
