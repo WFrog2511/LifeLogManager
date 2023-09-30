@@ -101,7 +101,7 @@ const InputPage: React.FC = () => {
                 margin="normal"
             />
             <Button variant="contained" color="primary" onClick={handleSubmit}>
-                Submit
+                登録
             </Button>
         </DiaryEntryWrapper>
     );

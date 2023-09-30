@@ -59,21 +59,21 @@ export const ExpenseTracker: React.FC = () => {
     <ExpenseTrackerWrapper>
       <Title>家計簿</Title>
       <TextField
-        label="Description"
+        label="概要"
         value={description}
         onChange={handleDescriptionChange}
         margin="normal"
         fullWidth
       />
       <TextField
-        label="Amount"
+        label="金額"
         value={amount}
         onChange={handleAmountChange}
         margin="normal"
         fullWidth
       />
       <TextField
-        label="Type"
+        label=""
         select
         value={type}
         onChange={handleTypeChange}
@@ -83,11 +83,11 @@ export const ExpenseTracker: React.FC = () => {
         margin="normal"
         fullWidth
       >
-        <option value="expense">Expense</option>
-        <option value="income">Income</option>
+        <option value="expense">支出</option>
+        <option value="income">収入</option>
       </TextField>
       <Button variant="contained" color="primary" onClick={handleAddItem}>
-        Add Item
+        追加
       </Button>
       <List>
         {items.map((item, index) => (
