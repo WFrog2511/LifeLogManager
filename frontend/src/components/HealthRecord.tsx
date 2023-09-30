@@ -14,6 +14,10 @@ const HealthRecordWrapper = styled.div`
   border-radius: 8px;
 `;
 
+const Title = styled.h2`
+  margin-bottom: 20px;
+`;
+
 const ImageWrapper = styled.div`
   position: relative;
   width: 100%;
@@ -30,6 +34,8 @@ const Marker = styled.div`
   cursor: pointer;
 `;
 
+// TODO: 起床時間/就寝時間 入力欄の実装
+// TODO: 睡眠時間を自動計算する機能の実装
 export const HealthRecord: React.FC = () => {
     const [memo, setMemo] = useState('');
     const [markers, setMarkers] = useState<{x: number, y: number}[]>([]);
@@ -62,6 +68,7 @@ export const HealthRecord: React.FC = () => {
 
     return (
         <HealthRecordWrapper>
+            <Title>健康記録</Title>
             <ImageWrapper ref={imageWrapperRef} onClick={handleImageClick}>
                 <Person style={{ width: '100%', height:'100%', position: 'absolute', top: 0, left: 0 }} />
                 {markers.map((marker, index) => (

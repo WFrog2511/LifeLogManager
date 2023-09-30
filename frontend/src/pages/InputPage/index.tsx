@@ -69,12 +69,12 @@ const InputPage: React.FC = () => {
             <FormControlLabel
                 control={
                 <Checkbox
-                    checked={checkboxes['task1'] || false}
+                    checked={checkboxes['ゲーム'] || false}
                     onChange={handleCheckboxChange}
-                    name="task1"
+                    name="ゲーム"
                 />
                 }
-                label="Task 1"
+                label="ゲーム"
             />
             <TextField
                 label="新しい知見"

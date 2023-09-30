@@ -12,6 +12,10 @@ const PetHealthEntryWrapper = styled.div`
   border-radius: 8px;
 `;
 
+const Title = styled.h2`
+  margin-bottom: 20px;
+`;
+
 export const PetHealthEntry: React.FC = () => {
   const [petMemo, setPetMemo] = useState('');
   const [file, setFile] = useState<File | null>(null);
@@ -34,6 +38,7 @@ export const PetHealthEntry: React.FC = () => {
 
   return (
     <PetHealthEntryWrapper>
+      <Title>ペット記録</Title>
       <input
         accept="image/*"
         style={{ display: 'none' }}
@@ -43,11 +48,11 @@ export const PetHealthEntry: React.FC = () => {
       />
       <label htmlFor="pet-image-file">
         <Button variant="contained" component="span">
-          Upload Pet Image
+          写真アップロード
         </Button>
       </label>
       <TextField
-        label="Pet Memo"
+        label="メモ"
         multiline
         rows={4}
         value={petMemo}
@@ -55,9 +60,6 @@ export const PetHealthEntry: React.FC = () => {
         variant="outlined"
         margin="normal"
       />
-      <Button variant="contained" color="primary" onClick={handleSubmit}>
-        Submit
-      </Button>
     </PetHealthEntryWrapper>
   );
 };

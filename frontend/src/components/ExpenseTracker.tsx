@@ -13,6 +13,10 @@ const ExpenseTrackerWrapper = styled.div`
   border-radius: 8px;
 `;
 
+const Title = styled.h2`
+  margin-bottom: 20px;
+`;
+
 type ExpenseItem = {
   description: string;
   amount: number;
@@ -53,6 +57,7 @@ export const ExpenseTracker: React.FC = () => {
 
   return (
     <ExpenseTrackerWrapper>
+      <Title>家計簿</Title>
       <TextField
         label="Description"
         value={description}

@@ -12,6 +12,10 @@ const ArtworkUploadWrapper = styled.div`
   border-radius: 8px;
 `;
 
+const Title = styled.h2`
+  margin-bottom: 20px;
+`;
+
 export const ArtworkUpload: React.FC = () => {
   const [files, setFiles] = useState<FileList | null>(null);
 
@@ -32,6 +36,7 @@ export const ArtworkUpload: React.FC = () => {
 
   return (
     <ArtworkUploadWrapper>
+      <Title>作品記録</Title>
       <input
         accept="image/*,video/*,model/*"
         style={{ display: 'none' }}
