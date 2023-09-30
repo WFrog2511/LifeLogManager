@@ -57,7 +57,8 @@ const InputPage: React.FC = () => {
             },
             artwork: {
                 files: [],
-                links:  []
+                links: [],
+                notes: "",
             },
             expense: {
                 expenseItems: [],
