@@ -1,6 +1,6 @@
 /** 日誌の今日あった事の ユーザーごとの選択肢 を取得する処理 */
 export const getTaskList = async(userId: string) =>{
-    return {data: ["ゲーム", "散歩", "読書", ""]};
+    return {data: ["ゲーム", "散歩", "読書", "買い物", "勉強"]};
     
     //TODO: サーバー側を対応させる
     try {

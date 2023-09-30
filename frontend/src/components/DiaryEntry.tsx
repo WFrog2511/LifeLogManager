@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { 
-	Checkbox,
+	Checkbox,	
 	TextField, 
 	FormControlLabel,
+	IconButton,
 } from '@mui/material';
+import { AddCircleOutline } from '@mui/icons-material';
 import styled from '@emotion/styled';
 
 const DiaryEntryWrapper = styled.div`
@@ -21,6 +23,20 @@ const Title = styled.h2`
   	margin-bottom: 20px;
 `;
 
+const CheckboxContainer = styled.fieldset`
+  border: 2px solid whitegray;
+  border-radius: 5px;
+  padding: 20px;
+  margin: 10px 0;
+  :hover {
+	border: 2px solid black;
+  }
+`;
+
+const Legend = styled.legend`
+  padding: 0 10px;
+`;
+
 export type DiaryEntryData = {
 	events:         string;                     // 今日の出来事
 	insights:       string;                     // 今日の知見
@@ -29,6 +45,7 @@ export type DiaryEntryData = {
 type DiaryEntryProps = {
 	setInputData: (x: DiaryEntryData) => void; 
 	taskList: Array<string>;
+	setTaskList:  (x: Array<string>) => void;
 }
 
 export const DiaryEntry: React.FC<DiaryEntryProps> = (props: DiaryEntryProps) => {
@@ -37,6 +54,7 @@ export const DiaryEntry: React.FC<DiaryEntryProps> = (props: DiaryEntryProps) =>
 		insights: 		"",
 		routineTasks: 	{},
 	});
+	const [isChecked, setIsChecked] = useState(false);
   
     const handleEntryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const newData: DiaryEntryData = {...inputData, events: event.target.value};
@@ -60,21 +78,34 @@ export const DiaryEntry: React.FC<DiaryEntryProps> = (props: DiaryEntryProps) =>
 		props.setInputData(newData);
     };
 
+	const handleAddCheckbox = () => {
+		const newLabel = window.prompt('新しい選択肢を入力してください');	//TODO: 見栄えの良いモーダルに変える
+		if (newLabel) {
+			props.setTaskList([...props.taskList, newLabel]);
+		}
+	};
+
 	return (
 		<DiaryEntryWrapper>
 			<Title>日誌</Title>
-            {props.taskList.map((item,index) => 
-				<FormControlLabel
-					control={
-					<Checkbox
-						checked={inputData.routineTasks[item]}
-						onChange={handleCheckboxChange}
-						name={item}
+			<CheckboxContainer>
+				<Legend>今日やったこと</Legend>
+				{props.taskList.map((item,index) => 
+					<FormControlLabel
+						control={
+						<Checkbox
+							checked={inputData.routineTasks[item]}
+							onChange={handleCheckboxChange}
+							name={item}
+						/>
+						}
+						label={item}
 					/>
-					}
-					label={item}
-				/>
-			)}
+				)}
+				<IconButton edge="end" aria-label="delete" onClick={handleAddCheckbox}>
+					<AddCircleOutline />
+				</IconButton>
+			</CheckboxContainer>
 			
             <TextField
                 label="新しい知見"
