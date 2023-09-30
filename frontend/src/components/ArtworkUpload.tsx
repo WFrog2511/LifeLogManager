@@ -5,7 +5,8 @@ import styled from '@emotion/styled';
 const ArtworkUploadWrapper = styled.div`
 	display: flex;
 	flex-direction: column;
-	max-width: 500px;
+	box-sizing: border-box;
+	width: 100%;
 	margin: auto;
 	padding: 20px;
 	border: 1px solid #ddd;

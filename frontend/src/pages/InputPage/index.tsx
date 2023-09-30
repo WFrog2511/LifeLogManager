@@ -14,6 +14,7 @@ import { ExpenseTracker } from '../../components/ExpenseTracker';
 import { HealthRecord } from '../../components/HealthRecord';
 
 const DiaryEntryWrapper = styled.div`
+    // box-sizing: border-box;
     display: flex;
     flex-direction: column;
     max-width: 500px;
@@ -21,6 +22,11 @@ const DiaryEntryWrapper = styled.div`
     padding: 20px;
     border: 1px solid #ddd;
     border-radius: 8px;
+`;
+
+const ComponentWrapper = styled.div`
+    // box-sizing: border-box;
+    padding: 20px;
 `;
 
 const InputPage: React.FC = () => {
@@ -86,11 +92,11 @@ const InputPage: React.FC = () => {
                 margin="normal"
             />
 
-            <HealthRecord/>
-            <PetHealthEntry/>
-            <ArtworkUpload/>
-            <ExpenseTracker/>
-
+            <ComponentWrapper>  <HealthRecord/>     </ComponentWrapper>
+            <ComponentWrapper>  <PetHealthEntry/>   </ComponentWrapper>
+            <ComponentWrapper>  <ArtworkUpload/>    </ComponentWrapper>
+            <ComponentWrapper>  <ExpenseTracker/>   </ComponentWrapper>
+            
             <TextField
                 label="今日の出来事"
                 multiline
