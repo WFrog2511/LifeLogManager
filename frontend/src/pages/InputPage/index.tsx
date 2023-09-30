@@ -14,13 +14,13 @@ import { ExpenseTracker } from '../../components/ExpenseTracker';
 import { HealthRecord } from '../../components/HealthRecord';
 
 const DiaryEntryWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  max-width: 500px;
-  margin: auto;
-  padding: 20px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    max-width: 500px;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
 `;
 
 const InputPage: React.FC = () => {

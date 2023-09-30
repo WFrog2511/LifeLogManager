@@ -5,33 +5,33 @@ import Person from '@mui/icons-material/AccessibilityNew';
 import styled from '@emotion/styled';
 
 const HealthRecordWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  max-width: 500px;
-  margin: auto;
-  padding: 20px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    max-width: 500px;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
 `;
 
 const Title = styled.h2`
-  margin-bottom: 20px;
+    margin-bottom: 20px;
 `;
 
 const ImageWrapper = styled.div`
-  position: relative;
-  width: 100%;
-  padding-top: 100%;
-  margin-bottom: 20px;
+    position: relative;
+    width: 100%;
+    padding-top: 100%;
+    margin-bottom: 20px;
 `;
 
 const Marker = styled.div`
-  position: absolute;
-  width: 20px;
-  height: 20px;
-  background-color: red;
-  border-radius: 50%;
-  cursor: pointer;
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background-color: red;
+    border-radius: 50%;
+    cursor: pointer;
 `;
 
 // TODO: 起床時間/就寝時間 入力欄の実装
