@@ -39,28 +39,28 @@ export const PetHealthEntry: React.FC = () => {
 
 	return (
 		<PetHealthEntryWrapper>
-		<Title>ペット記録</Title>
-		<input
-			accept="image/*"
-			style={{ display: 'none' }}
-			id="pet-image-file"
-			type="file"
-			onChange={handleFileChange}
-		/>
-		<label htmlFor="pet-image-file">
-			<Button variant="contained" component="span">
-				写真アップロード
-			</Button>
-		</label>
-		<TextField
-			label="メモ"
-			multiline
-			rows={4}
-			value={petMemo}
-			onChange={handlePetMemoChange}
-			variant="outlined"
-			margin="normal"
-		/>
+			<Title>ペット記録</Title>
+			<input
+				accept="image/*"
+				style={{ display: 'none' }}
+				id="pet-image-file"
+				type="file"
+				onChange={handleFileChange}
+			/>
+			<label htmlFor="pet-image-file">
+				<Button variant="contained" component="span">
+					写真アップロード
+				</Button>
+			</label>
+			<TextField
+				label="メモ"
+				multiline
+				rows={4}
+				value={petMemo}
+				onChange={handlePetMemoChange}
+				variant="outlined"
+				margin="normal"
+			/>
 		</PetHealthEntryWrapper>
 	);
 };

@@ -8,12 +8,13 @@ import {
 import submit from '../../services/submit';
 import styled from '@emotion/styled';
 
+import { DiaryEntry } from '../../components/DiaryEntry';
 import { PetHealthEntry } from '../../components/PetHealthEntry';
 import { ArtworkUpload } from '../../components/ArtworkUpload';
 import { ExpenseTracker } from '../../components/ExpenseTracker';
 import { HealthRecord } from '../../components/HealthRecord';
 
-const DiaryEntryWrapper = styled.div`
+const InputPageWrapper = styled.div`
     // box-sizing: border-box;
     display: flex;
     flex-direction: column;
@@ -30,38 +31,20 @@ const ComponentWrapper = styled.div`
 `;
 
 const InputPage: React.FC = () => {
-    const [entry, setEntry] = useState('');
     const [date, setDate] = useState(new Date().toISOString().substring(0, 10));
-    const [insights, setInsights] = useState('');
-    const [checkboxes, setCheckboxes] = useState<{ [key: string]: boolean }>({});
-  
-    const handleEntryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setEntry(event.target.value);
-    };
-
+    
     const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setDate(event.target.value);
     };
 
-    const handleInsightsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setInsights(event.target.value);
-    };
-    
-    const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setCheckboxes({
-            ...checkboxes,
-            [event.target.name]: event.target.checked,
-        });
-    };
-
     /**登録ボタンを押した際の処理 */
     const handleSubmit = () => {
-        console.log(date, entry);
-        submit(entry);
+        // console.log(date, entry);
+        // submit(entry);
     };
 
     return (
-        <DiaryEntryWrapper>
+        <InputPageWrapper>
             <TextField
                 label="日付"
                 type="date"
@@ -71,45 +54,17 @@ const InputPage: React.FC = () => {
                 shrink: true,
                 }}
             />
-            {/* TODO:チェックボックスの例。これをユーザーの設定に基づいて動的に生成する */}
-            <FormControlLabel
-                control={
-                <Checkbox
-                    checked={checkboxes['ゲーム'] || false}
-                    onChange={handleCheckboxChange}
-                    name="ゲーム"
-                />
-                }
-                label="ゲーム"
-            />
-            <TextField
-                label="新しい知見"
-                multiline
-                rows={4}
-                value={insights}
-                onChange={handleInsightsChange}
-                variant="outlined"
-                margin="normal"
-            />
 
+            <ComponentWrapper>  <DiaryEntry/>       </ComponentWrapper>
             <ComponentWrapper>  <HealthRecord/>     </ComponentWrapper>
             <ComponentWrapper>  <PetHealthEntry/>   </ComponentWrapper>
             <ComponentWrapper>  <ArtworkUpload/>    </ComponentWrapper>
             <ComponentWrapper>  <ExpenseTracker/>   </ComponentWrapper>
             
-            <TextField
-                label="今日の出来事"
-                multiline
-                rows={6}
-                value={entry}
-                onChange={handleEntryChange}
-                variant="outlined"
-                margin="normal"
-            />
             <Button variant="contained" color="primary" onClick={handleSubmit}>
                 登録
             </Button>
-        </DiaryEntryWrapper>
+        </InputPageWrapper>
     );
 };
 
