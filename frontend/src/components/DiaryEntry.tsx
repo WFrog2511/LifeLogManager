@@ -5,7 +5,6 @@ import {
 	FormControlLabel,
 } from '@mui/material';
 import styled from '@emotion/styled';
-import { Insights } from '@mui/icons-material';
 
 const DiaryEntryWrapper = styled.div`
 	display: flex;
@@ -29,6 +28,7 @@ export type DiaryEntryData = {
 }
 type DiaryEntryProps = {
 	setInputData: (x: DiaryEntryData) => void; 
+	taskList: Array<string>;
 }
 
 export const DiaryEntry: React.FC<DiaryEntryProps> = (props: DiaryEntryProps) => {
@@ -63,17 +63,19 @@ export const DiaryEntry: React.FC<DiaryEntryProps> = (props: DiaryEntryProps) =>
 	return (
 		<DiaryEntryWrapper>
 			<Title>日誌</Title>
-			{/* TODO:チェックボックスの例。これをユーザーの設定に基づいて動的に生成する */}
-            <FormControlLabel
-                control={
-                <Checkbox
-                    checked={inputData.routineTasks['ゲーム'] || false}
-                    onChange={handleCheckboxChange}
-                    name="ゲーム"
-                />
-                }
-                label="ゲーム"
-            />
+            {props.taskList.map((item,index) => 
+				<FormControlLabel
+					control={
+					<Checkbox
+						checked={inputData.routineTasks[item]}
+						onChange={handleCheckboxChange}
+						name={item}
+					/>
+					}
+					label={item}
+				/>
+			)}
+			
             <TextField
                 label="新しい知見"
                 multiline

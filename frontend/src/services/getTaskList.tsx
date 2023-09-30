@@ -1,14 +1,15 @@
-import { InputData } from "../pages/InputPage";
-
-/** 入力ページのデータをサーバーに送信する処理 */
-export const submit = async(data: InputData) =>{
+/** 日誌の今日あった事の ユーザーごとの選択肢 を取得する処理 */
+export const getTaskList = async(userId: string) =>{
+    return {data: ["ゲーム", "散歩", "読書", ""]};
+    
+    //TODO: サーバー側を対応させる
     try {
-        const response = await fetch('http://localhost:8080/api/submit', {
-            method: 'POST',
+        const response = await fetch('http://localhost:8080/api/tasklist', {
+            method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ data }),
+            // body: JSON.stringify({ userId }),
         });
   
         if (response.ok) {

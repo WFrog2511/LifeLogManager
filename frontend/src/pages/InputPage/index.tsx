@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     TextField, 
     Button,
 } from '@mui/material';
-import submit from '../../services/submit';
 import styled from '@emotion/styled';
+
+import {submit} from '../../services/submit';
+import {getTaskList} from '../../services/getTaskList';
 
 import { DiaryEntry, DiaryEntryData } from '../../components/DiaryEntry';
 import { PetHealthEntry, PetHealthEntryData } from '../../components/PetHealthEntry';
@@ -25,7 +27,6 @@ const InputPageWrapper = styled.div`
 const ComponentWrapper = styled.div`
     padding: 20px;
 `;
-
 
 export type InputData = {
     date: string;       // 日付
@@ -63,7 +64,17 @@ const InputPage: React.FC = () => {
             }
         }
     );
-    
+    const [taskList, setTaskList] = useState<Array<string>>(["ゲーム", "プログラミング", "運動", "読書"]);
+        
+    useEffect(() => {
+        const getTaskListWrapper = async () => {
+            const res = await getTaskList("userId");
+            setTaskList(res.data);
+        }
+
+        getTaskListWrapper();
+    },[])
+
     const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setInputData( {...inputData, date: event.target.value} );
     };
@@ -86,7 +97,7 @@ const InputPage: React.FC = () => {
                 }}
             />
 
-            <ComponentWrapper>  <DiaryEntry     setInputData={(val) => setInputData({...inputData, diary: val})}/>      </ComponentWrapper>
+            <ComponentWrapper>  <DiaryEntry     setInputData={(val) => setInputData({...inputData, diary: val})} taskList={taskList}/>  </ComponentWrapper>
             <ComponentWrapper>  <HealthRecord   setInputData={(val) => setInputData({...inputData, health: val})}/>     </ComponentWrapper>
             <ComponentWrapper>  <PetHealthEntry setInputData={(val) => setInputData({...inputData, pet: val})}/>        </ComponentWrapper>
             <ComponentWrapper>  <ArtworkUpload  setInputData={(val) => setInputData({...inputData, artwork: val})}/>    </ComponentWrapper>
