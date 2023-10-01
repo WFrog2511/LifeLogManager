@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
 	Checkbox,	
 	TextField, 
@@ -52,10 +52,21 @@ export const DiaryEntry: React.FC<DiaryEntryProps> = (props: DiaryEntryProps) =>
 	const [inputData, setInputData] = useState<DiaryEntryData>({
 		events: 		"",
 		insights: 		"",
-		routineTasks: 	{},
+		routineTasks: 	{}
 	});
-	const [isChecked, setIsChecked] = useState(false);
   
+	/** やったことチェックボックスの選択肢に変更があった場合, 自動的にroutineTasksにも反映させる */
+	useEffect(() => {
+        const newRoutineTasks = props.taskList.reduce((acc, key) => {
+			acc[key] = inputData.routineTasks[key] ? true : false;
+			return acc;
+		}, {} as Record<string, boolean>);
+
+		const newData: DiaryEntryData = {...inputData, routineTasks: newRoutineTasks};
+		setInputData(newData);
+		props.setInputData(newData);
+    }, [props.taskList]);
+
     const handleEntryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const newData: DiaryEntryData = {...inputData, events: event.target.value};
 		setInputData(newData);
@@ -80,7 +91,12 @@ export const DiaryEntry: React.FC<DiaryEntryProps> = (props: DiaryEntryProps) =>
 
 	const handleAddCheckbox = () => {
 		const newLabel = window.prompt('新しい選択肢を入力してください');	//TODO: 見栄えの良いモーダルに変える
+		
 		if (newLabel) {
+			if (props.taskList.includes(newLabel)){
+				console.log("既にある選択肢です");							//TODO: 見栄えの良いモーダルに変える
+				return 
+			}
 			props.setTaskList([...props.taskList, newLabel]);
 		}
 	};
@@ -93,13 +109,14 @@ export const DiaryEntry: React.FC<DiaryEntryProps> = (props: DiaryEntryProps) =>
 				{props.taskList.map((item,index) => 
 					<FormControlLabel
 						control={
-						<Checkbox
-							checked={inputData.routineTasks[item]}
-							onChange={handleCheckboxChange}
-							name={item}
-						/>
+							<Checkbox
+								checked={inputData.routineTasks[item] ? true : false}
+								onChange={handleCheckboxChange}
+								name={item}
+							/>
 						}
 						label={item}
+						key={index}
 					/>
 				)}
 				<IconButton edge="end" aria-label="delete" onClick={handleAddCheckbox}>
