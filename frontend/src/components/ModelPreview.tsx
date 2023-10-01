@@ -8,7 +8,7 @@ type ModelProps = {
 
 const Model: React.FC<ModelProps> = ({ url }) => {
   const { scene } = useGLTF(url);
-  return <primitive object={scene} />;
+  return <primitive object={scene} receiveShadow castShadow />;
 };
 
 type ModelPreviewProps = {
@@ -17,10 +17,17 @@ type ModelPreviewProps = {
 
 const ModelPreview: React.FC<ModelPreviewProps> = ({ fileUrl }) => {
   return (
-    <Canvas style={{ width: '100%', height: '400px'}}>
+    <Canvas style={{ width: '400px', height: '400px' }} camera={{ position: [0, 0, 5] }}>
       <Suspense fallback={null}>
         <Model url={fileUrl} />
       </Suspense>
+      <directionalLight
+        color={0xffffff}
+        intensity={1.0}
+        position={[0, 10, 5]}
+        castShadow
+      />
+      <ambientLight intensity={0.3} />
       <OrbitControls />
     </Canvas>
   );
