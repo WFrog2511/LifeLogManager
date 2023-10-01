@@ -17,7 +17,7 @@ type ModelPreviewProps = {
 
 const ModelPreview: React.FC<ModelPreviewProps> = ({ fileUrl }) => {
   return (
-    <Canvas style={{ width: '400px', height: '400px' }}>
+    <Canvas style={{ width: '100%', height: '400px'}}>
       <Suspense fallback={null}>
         <Model url={fileUrl} />
       </Suspense>

@@ -7,6 +7,7 @@ import {
 import styled from '@emotion/styled';
 import CloseIcon from '@mui/icons-material/Close';
 import ModelPreview from './ModelPreview';
+import OBJModel from './OBJModel';
 
 const ArtworkUploadWrapper = styled.div`
 	display: flex;
@@ -39,7 +40,10 @@ const StyledCloseIcon = styled(CloseIcon)`
 	}
 `;
 
-
+type PreviewData = {
+    url: string;
+    fileType: string;
+};
 export type ArtworkUploadData = {
 	files:	Array<File>;    // アップロードされた作品のファイルリスト
 	links:  Array<string>;  // YoutubeやGitHubなどのリンクのリスト
@@ -56,7 +60,7 @@ export const ArtworkUpload: React.FC<ArtworkUploadProps> = (props: ArtworkUpload
 		links: [],
 		notes:  ""
 	});
-	const [previewUrls, setPreviewUrls] = useState<string[]>([]);
+	const [previews, setPreviews] = useState<PreviewData[]>([]);
 
 	const handlePetMemoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const newData: ArtworkUploadData = {...inputData, notes: event.target.value};
@@ -69,15 +73,18 @@ export const ArtworkUpload: React.FC<ArtworkUploadProps> = (props: ArtworkUpload
 		if (newFiles && newFiles.length > 0) {
 			const newFileArray = Array.from(newFiles);
 			const updatedFiles = [...inputData.files, ...newFileArray];
-			const updatedPreviewUrls = [
-				...previewUrls,
-				...newFileArray.map(file => URL.createObjectURL(file))
+			const updatedPreviews = [
+				...previews,
+				...newFileArray.map(file => ({
+					url: URL.createObjectURL(file),
+					fileType: file.name.split('.').length > 0 ? file.name.split('.').slice(-1)[0].toLowerCase() : "" // ファイル拡張子を取得
+				}))
 			];
 
 			const newData: ArtworkUploadData = {...inputData, files: updatedFiles};
 			setInputData(newData);
 			props.setInputData(newData);
-			setPreviewUrls(updatedPreviewUrls);
+			setPreviews(updatedPreviews);
 
 			console.log(newFiles[0]);
 		}
@@ -85,28 +92,31 @@ export const ArtworkUpload: React.FC<ArtworkUploadProps> = (props: ArtworkUpload
 
 	const handleImageRemove = (index: number) => {
 		const updatedFiles = inputData.files.filter((_, fileIndex) => fileIndex !== index);
-		const updatedPreviewUrls = previewUrls.filter((_, urlIndex) => urlIndex !== index);
+		const updatedPreviews = previews.filter((_, previewIndex) => previewIndex !== index);
 
 		const newData: ArtworkUploadData = {...inputData, files: updatedFiles};
 		setInputData(newData);
 		props.setInputData(newData);
-		setPreviewUrls(updatedPreviewUrls);
+		setPreviews(updatedPreviews);
 	};
 
 
 	return (
 		<ArtworkUploadWrapper>
 			<Title>作品記録</Title>
-			{previewUrls.map((url, index) => (
+			{previews.map((item, index) => (
 				<ImagePreviewWrapper key={index}>
 					{inputData.files[index].type.startsWith('image') ?  
-						<img src={url} alt={`Preview ${index}`} style={{ width: '100%', height: 'auto' }} />
+						<img src={item.url} alt={`Preview ${index}`} style={{ width: '100%', height: 'auto' }} />
 						:
 						inputData.files[index].type.startsWith('video') ?
-						<video controls src={url} style={{ width: '100%', height: 'auto' }} />
+						<video controls src={item.url} style={{ width: '100%', height: 'auto' }} />
 						:
-						inputData.files[index].type === 'model/gltf-binary' ?
-						<ModelPreview fileUrl={url} />
+						item.fileType === 'obj' ?
+						<OBJModel url={item.url} />
+						:
+						item.fileType === 'gltf' || item.fileType === 'glb' ?
+						<ModelPreview fileUrl={item.url} />
 						:
 						null
 					}
