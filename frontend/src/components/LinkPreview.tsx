@@ -1,26 +1,44 @@
-// src/components/LinkPreview.tsx
-import React, { useState } from 'react';
-import { TextField } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { 
+	IconButton,
+	Link
+} from '@mui/material';
 import styled from '@emotion/styled';
+import { ArtworkUploadData } from './ArtworkUpload';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const LinkPreviewWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  margin: auto;
-  padding-top: 20px;
-  padding-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin: auto;
+    padding-top: 20px;
+    padding-bottom: 20px;
+
+    position: relative;
+    display: inline-block;
+    margin: 5px;
 `;
 
-export const LinkPreview: React.FC = () => {
-    const [url, setUrl] = useState('');
+type LinkPreviewProps = {
+    url     : string;
+    index   : number;
+    inputData:  ArtworkUploadData;
+    setInputData: (x: ArtworkUploadData) => void; 
+};
+
+export const LinkPreview: React.FC<LinkPreviewProps> = (props: LinkPreviewProps) => {
     const [preview, setPreview] = useState<React.ReactNode | null>(null);
 
-    const handleUrlChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const newUrl = event.target.value;
-        setUrl(newUrl);
+
+    useEffect(() => {
+        const newUrl = props.url;
+        console.log(newUrl);
 
         if (newUrl.includes('youtube.com')) {
+            console.log(newUrl);
+            
+
             const videoId = newUrl.split('v=')[1];
             setPreview(
                 <iframe
@@ -35,21 +53,26 @@ export const LinkPreview: React.FC = () => {
         } else {
             setPreview(null);
         }
-    };
+    }, []);
+
+    const handleImageRemove = (index: number) => {
+		const updatedLinks = props.inputData.links.filter((_, fileIndex) => fileIndex !== index);
+		const newData: ArtworkUploadData = {...props.inputData, links: updatedLinks};
+		props.setInputData(newData);
+	};
 
   return (
     <LinkPreviewWrapper>
-        <TextField
-            label="URL"
-            value={url}
-            onChange={handleUrlChange}
-            variant="outlined"
-            fullWidth
-            margin="normal"
-        />
-        <div>
-            {preview}
-        </div>
+
+        <Link href={props.url}>{props.url}</Link>
+        {preview}
+        <IconButton
+            edge="end"
+            aria-label="delete"
+            onClick={() => handleImageRemove(props.index)}
+        >
+            <DeleteIcon />
+        </IconButton>
     </LinkPreviewWrapper>
   );
 };

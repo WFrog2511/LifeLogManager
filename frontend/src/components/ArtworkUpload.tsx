@@ -8,6 +8,7 @@ import styled from '@emotion/styled';
 import CloseIcon from '@mui/icons-material/Close';
 import ModelPreview from './ModelPreview';
 import OBJModel from './OBJModel';
+import { LinkPreview } from './LinkPreview';
 
 const ArtworkUploadWrapper = styled.div`
 	display: flex;
@@ -51,9 +52,8 @@ export type ArtworkUploadData = {
 };
 type ArtworkUploadProps = {
 	setInputData: (x: ArtworkUploadData) => void; 
-}
+};
 
-//TODO: Linkも入力できるようにする
 export const ArtworkUpload: React.FC<ArtworkUploadProps> = (props: ArtworkUploadProps) => {
 	const [inputData, setInputData] = useState<ArtworkUploadData>({
 		files: [],
@@ -101,9 +101,28 @@ export const ArtworkUpload: React.FC<ArtworkUploadProps> = (props: ArtworkUpload
 	};
 
 
+	const handleAddLink = () => {
+		const newUrl = window.prompt('URLを追加してください');	//TODO: 見栄えの良いモーダルに変える
+		
+		if (newUrl) {
+			const updatedLinks = [...inputData.links, newUrl];
+			const newData: ArtworkUploadData = {...inputData, links: updatedLinks};
+			setInputData(newData);
+			props.setInputData(newData);
+		}
+	};
+
+
 	return (
 		<ArtworkUploadWrapper>
 			<Title>作品記録</Title>
+
+			<label htmlFor="artwork-files">
+				<Button variant="contained" component="span" fullWidth>
+					ファイル アップロード
+				</Button>
+			</label>
+
 			{previews.map((item, index) => (
 				<ImagePreviewWrapper key={index}>
 					{inputData.files[index].type.startsWith('image') ?  
@@ -137,11 +156,15 @@ export const ArtworkUpload: React.FC<ArtworkUploadProps> = (props: ArtworkUpload
 				multiple
 				onChange={handleFilesChange}
 			/>
-			<label htmlFor="artwork-files">
-				<Button variant="contained" component="span" fullWidth>
-					ファイル アップロード
-				</Button>
-			</label>
+
+			<Button variant="contained" color="primary" onClick={handleAddLink}>
+                URL追加
+            </Button>
+			
+			{inputData.links.map((item, index) => (
+				<LinkPreview url={item} index={index} inputData={inputData} setInputData={setInputData}/>
+			))}
+			
 			<TextField
 				label="メモ"
 				multiline
