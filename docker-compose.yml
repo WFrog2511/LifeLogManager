@@ -22,15 +22,16 @@ services:
       - "3000:3000"
 
   db:
-    image: postgres:13
+    image: mysql:latest
     environment:
-      POSTGRES_DB: lifelog
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: mydatabase
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
     ports:
-      - "5432:5432"
+      - "3306:3306"
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - db_data:/var/lib/mysql
 
 volumes:
-  pgdata:
+  db_data:
