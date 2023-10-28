@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { 
 	Checkbox,	
 	TextField, 
@@ -41,13 +41,13 @@ export type DiaryEntryData = {
 	events:         string;                     // 今日の出来事
 	insights:       string;                     // 今日の知見
 	routineTasks:   Record<string, boolean>;    // 今日やったこと
-}
+};
 type DiaryEntryProps = {
 	inputData:	DiaryEntryData;
 	setInputData: (x: DiaryEntryData) => void; 
 	taskList: Array<string>;
 	setTaskList:  (x: Array<string>) => void;
-}
+};
 
 export const DiaryEntry: React.FC<DiaryEntryProps> = (props: DiaryEntryProps) => {
 

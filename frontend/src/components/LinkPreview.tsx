@@ -30,24 +30,19 @@ type LinkPreviewProps = {
 export const LinkPreview: React.FC<LinkPreviewProps> = (props: LinkPreviewProps) => {
     const [preview, setPreview] = useState<React.ReactNode | null>(null);
 
-
     useEffect(() => {
         const newUrl = props.url;
-        console.log(newUrl);
 
         if (newUrl.includes('youtube.com')) {
-            console.log(newUrl);
-            
-
             const videoId = newUrl.split('v=')[1];
             setPreview(
                 <iframe
-                width="100%"
-                height="250px"    // 💩アスペクト比を固定したかったが, aspect-ratioが効かなかったため
-                src={`https://www.youtube.com/embed/${videoId}`}
-                title="YouTube video player"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
+                    width="100%"
+                    height="250px"    // 💩アスペクト比を固定したかったが, aspect-ratioが効かなかったため
+                    src={`https://www.youtube.com/embed/${videoId}`}
+                    title="YouTube video player"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
                 ></iframe>
             );
         } else {
@@ -61,18 +56,18 @@ export const LinkPreview: React.FC<LinkPreviewProps> = (props: LinkPreviewProps)
 		props.setInputData(newData);
 	};
 
-  return (
-    <LinkPreviewWrapper>
+    return (
+        <LinkPreviewWrapper>
 
-        <Link href={props.url}>{props.url}</Link>
-        {preview}
-        <IconButton
-            edge="end"
-            aria-label="delete"
-            onClick={() => handleImageRemove(props.index)}
-        >
-            <DeleteIcon />
-        </IconButton>
-    </LinkPreviewWrapper>
-  );
+            <Link href={props.url}>{props.url}</Link>
+            {preview}
+            <IconButton
+                edge="end"
+                aria-label="delete"
+                onClick={() => handleImageRemove(props.index)}
+            >
+                <DeleteIcon />
+            </IconButton>
+        </LinkPreviewWrapper>
+    );
 };

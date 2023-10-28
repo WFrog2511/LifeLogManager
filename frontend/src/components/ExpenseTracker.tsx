@@ -105,15 +105,15 @@ export const ExpenseTracker: React.FC<ExpenseTrackerProps> = (props: ExpenseTrac
             </Button>
             <List>
                 {props.inputData.expenseItems.map((item, index) => (
-                <ListItem key={index}>
-                    <ListItemText
-                        primary={item.description}
-                        secondary={`${item.type === 'income' ? '+' : '-'}￥${item.amount}`}
-                    />
-                    <IconButton edge="end" aria-label="delete" onClick={() => handleDeleteItem(index)}>
-                        <DeleteIcon />
-                    </IconButton>
-                </ListItem>
+                    <ListItem key={index}>
+                        <ListItemText
+                            primary={item.description}
+                            secondary={`${item.type === 'income' ? '+' : '-'}￥${item.amount}`}
+                        />
+                        <IconButton edge="end" aria-label="delete" onClick={() => handleDeleteItem(index)}>
+                            <DeleteIcon />
+                        </IconButton>
+                    </ListItem>
                 ))}
             </List>
         </ExpenseTrackerWrapper>

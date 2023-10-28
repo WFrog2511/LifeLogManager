@@ -41,14 +41,13 @@ const StyledCloseIcon = styled(CloseIcon)`
 export type PetHealthEntryData = {
 	notes:  string;         // ペットの様子を記述する文字列
     photos: Array<File>;    // ペットの写真のファイルリスト
-}
+};
 type PetHealthEntryProps = {
 	inputData: PetHealthEntryData;
 	setInputData: (x: PetHealthEntryData) => void; 
-}
+};
 
 export const PetHealthEntry: React.FC<PetHealthEntryProps> = (props: PetHealthEntryProps) => {
-
 	const [previewUrls, setPreviewUrls] = useState<string[]>([]);
 	
 	const handlePetMemoChange = (event: React.ChangeEvent<HTMLInputElement>) => {

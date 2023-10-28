@@ -1,5 +1,5 @@
 // src/components/HealthRecord.tsx
-import React, { useState, useRef } from 'react';
+import React, { useRef } from 'react';
 import Person from '@mui/icons-material/AccessibilityNew';
 import styled from '@emotion/styled';
 
@@ -39,15 +39,15 @@ type BodyMark = {
     x: number; 
     y: number; 
     note: string ;
-}
+};
 export type HealthRecordData = {
     bodyMarks:  Array<BodyMark>;    // 体の以上点(座標) と 状態(文字列)
     mealPhotos: Array<File>;        // 食事の写真リスト
-}
+};
 type HealthRecordProps = {
     inputData:  HealthRecordData;
 	setInputData: (x: HealthRecordData) => void; 
-}
+};
 
 // TODO: 起床時間/就寝時間 入力欄の実装
 // TODO: 睡眠時間を自動計算する機能の実装

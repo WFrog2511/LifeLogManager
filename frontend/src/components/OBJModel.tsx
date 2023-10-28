@@ -3,9 +3,9 @@ import * as THREE from 'three';
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
-interface OBJPreviewProps {
+type OBJPreviewProps = {
     url: string;
-}
+};
 
 const OBJPreview: React.FC<OBJPreviewProps> = ({ url }) => {
     const containerRef = useRef<HTMLDivElement | null>(null);
