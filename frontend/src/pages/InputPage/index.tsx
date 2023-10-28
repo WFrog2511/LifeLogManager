@@ -101,11 +101,11 @@ const InputPage: React.FC = () => {
                 />
             </ComponentWrapper>
 
-            <ComponentWrapper>  <DiaryEntry     setInputData={(val) => setInputData({...inputData, diary: val})} taskList={taskList} setTaskList={setTaskList}/>  </ComponentWrapper>
-            <ComponentWrapper>  <HealthRecord   setInputData={(val) => setInputData({...inputData, health: val})}/>     </ComponentWrapper>
-            <ComponentWrapper>  <PetHealthEntry setInputData={(val) => setInputData({...inputData, pet: val})}/>        </ComponentWrapper>
-            <ComponentWrapper>  <ArtworkUpload  setInputData={(val) => setInputData({...inputData, artwork: val})}/>    </ComponentWrapper>
-            <ComponentWrapper>  <ExpenseTracker setInputData={(val) => setInputData({...inputData, expense: val})}/>    </ComponentWrapper>
+            <ComponentWrapper>  <DiaryEntry     inputData={inputData.diary}     setInputData={(val) => setInputData({...inputData, diary: val})} taskList={taskList} setTaskList={setTaskList}/>  </ComponentWrapper>
+            <ComponentWrapper>  <HealthRecord   inputData={inputData.health}    setInputData={(val) => setInputData({...inputData, health: val})}/>     </ComponentWrapper>
+            <ComponentWrapper>  <PetHealthEntry inputData={inputData.pet}       setInputData={(val) => setInputData({...inputData, pet: val})}/>        </ComponentWrapper>
+            <ComponentWrapper>  <ArtworkUpload  inputData={inputData.artwork}   setInputData={(val) => setInputData({...inputData, artwork: val})}/>    </ComponentWrapper>
+            <ComponentWrapper>  <ExpenseTracker inputData={inputData.expense}   setInputData={(val) => setInputData({...inputData, expense: val})}/>    </ComponentWrapper>
             
             <ComponentWrapper>
                 <Button variant="contained" color="primary" onClick={handleSubmit} fullWidth>

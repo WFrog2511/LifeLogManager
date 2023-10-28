@@ -29,13 +29,11 @@ export type ExpenseTrackerData = {
 };
 
 type ExpenseTrackerProps = {
+    inputData:  ExpenseTrackerData;
     setInputData: (x: ExpenseTrackerData) => void
 };
 
 export const ExpenseTracker: React.FC<ExpenseTrackerProps> = (props: ExpenseTrackerProps) => {
-    const [inputData, setInputData] = useState<ExpenseTrackerData>({
-        expenseItems: [],
-    });
     
     const [description, setDescription] = useState('');
     const [amount, setAmount] = useState('');
@@ -56,8 +54,7 @@ export const ExpenseTracker: React.FC<ExpenseTrackerProps> = (props: ExpenseTrac
     const handleAddItem = () => {
         if (description && amount) {
             const newItem: ExpenseItem = { description, amount: parseFloat(amount), type };
-            const newData: ExpenseTrackerData = {...inputData, expenseItems: [...inputData.expenseItems, newItem]};
-            setInputData(newData);
+            const newData: ExpenseTrackerData = {...props.inputData, expenseItems: [...props.inputData.expenseItems, newItem]};
             props.setInputData(newData);
             
             setDescription('');
@@ -66,10 +63,9 @@ export const ExpenseTracker: React.FC<ExpenseTrackerProps> = (props: ExpenseTrac
     };
 
     const handleDeleteItem = (index: number) => {
-        const newItems = [...inputData.expenseItems];
+        const newItems = [...props.inputData.expenseItems];
         newItems.splice(index, 1);
-        const newData = {...inputData, expenseItems: newItems}
-        setInputData(newData);
+        const newData = {...props.inputData, expenseItems: newItems}
         props.setInputData(newData);
     };
 
@@ -108,7 +104,7 @@ export const ExpenseTracker: React.FC<ExpenseTrackerProps> = (props: ExpenseTrac
                 追加
             </Button>
             <List>
-                {inputData.expenseItems.map((item, index) => (
+                {props.inputData.expenseItems.map((item, index) => (
                 <ListItem key={index}>
                     <ListItemText
                         primary={item.description}

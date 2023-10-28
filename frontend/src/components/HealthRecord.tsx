@@ -1,6 +1,5 @@
 // src/components/HealthRecord.tsx
 import React, { useState, useRef } from 'react';
-import { TextField} from '@mui/material';
 import Person from '@mui/icons-material/AccessibilityNew';
 import styled from '@emotion/styled';
 
@@ -46,16 +45,14 @@ export type HealthRecordData = {
     mealPhotos: Array<File>;        // 食事の写真リスト
 }
 type HealthRecordProps = {
+    inputData:  HealthRecordData;
 	setInputData: (x: HealthRecordData) => void; 
 }
 
 // TODO: 起床時間/就寝時間 入力欄の実装
 // TODO: 睡眠時間を自動計算する機能の実装
 export const HealthRecord: React.FC<HealthRecordProps> = (props: HealthRecordProps) => {
-    const [inputData, setInputData] = useState<HealthRecordData>({
-		bodyMarks: [],
-        mealPhotos:[],
-	});
+
     const imageWrapperRef = useRef<HTMLDivElement | null>(null);
 
     const handleImageClick = (event: React.MouseEvent) => {
@@ -64,22 +61,21 @@ export const HealthRecord: React.FC<HealthRecordProps> = (props: HealthRecordPro
         const y = event.clientY - rect.top;
 
         // 既に同じ位置にマーカーが存在するか確認
-        const existingMarkerIndex = inputData.bodyMarks.findIndex(marker =>
+        const existingMarkerIndex = props.inputData.bodyMarks.findIndex(marker =>
             Math.abs(marker.x - x) < 10 && Math.abs(marker.y - y) < 10
         );
 
         let newData: HealthRecordData;
         if (existingMarkerIndex !== -1) {
             // 同じ位置にマーカーが存在する場合は、そのマーカーを削除
-            const newMarkers = inputData.bodyMarks.slice();
+            const newMarkers = props.inputData.bodyMarks.slice();
             newMarkers.splice(existingMarkerIndex, 1);
-            newData = {...inputData, bodyMarks: newMarkers};
+            newData = {...props.inputData, bodyMarks: newMarkers};
         } else {
             // 新しいマーカーを追加
             const newMarker: BodyMark = {x: x, y: y, note: ""};     // TODO: noteに文字列を入力できるようにする
-            newData = {...inputData, bodyMarks: [...inputData.bodyMarks, newMarker]};
+            newData = {...props.inputData, bodyMarks: [...props.inputData.bodyMarks, newMarker]};
         }
-        setInputData(newData);
         props.setInputData(newData);
     };
 
@@ -88,7 +84,7 @@ export const HealthRecord: React.FC<HealthRecordProps> = (props: HealthRecordPro
             <Title>健康記録</Title>
             <ImageWrapper ref={imageWrapperRef} onClick={handleImageClick}>
                 <Person style={{ width: '100%', height:'100%', position: 'absolute', top: 0, left: 0 }} />
-                {inputData.bodyMarks.map((marker, index) => (
+                {props.inputData.bodyMarks.map((marker, index) => (
                     <Marker
                     key={index}
                     style={{left: marker.x - 10, top: marker.y - 10}}

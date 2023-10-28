@@ -43,49 +43,41 @@ export type DiaryEntryData = {
 	routineTasks:   Record<string, boolean>;    // 今日やったこと
 }
 type DiaryEntryProps = {
+	inputData:	DiaryEntryData;
 	setInputData: (x: DiaryEntryData) => void; 
 	taskList: Array<string>;
 	setTaskList:  (x: Array<string>) => void;
 }
 
 export const DiaryEntry: React.FC<DiaryEntryProps> = (props: DiaryEntryProps) => {
-	const [inputData, setInputData] = useState<DiaryEntryData>({
-		events: 		"",
-		insights: 		"",
-		routineTasks: 	{}
-	});
-  
+
 	/** やったことチェックボックスの選択肢に変更があった場合, 自動的にroutineTasksにも反映させる */
 	useEffect(() => {
         const newRoutineTasks = props.taskList.reduce((acc, key) => {
-			acc[key] = inputData.routineTasks[key] ? true : false;
+			acc[key] = props.inputData.routineTasks[key] ? true : false;
 			return acc;
 		}, {} as Record<string, boolean>);
 
-		const newData: DiaryEntryData = {...inputData, routineTasks: newRoutineTasks};
-		setInputData(newData);
+		const newData: DiaryEntryData = {...props.inputData, routineTasks: newRoutineTasks};
 		props.setInputData(newData);
     }, [props.taskList]);
 
     const handleEntryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		const newData: DiaryEntryData = {...inputData, events: event.target.value};
-		setInputData(newData);
+		const newData: DiaryEntryData = {...props.inputData, events: event.target.value};
 		props.setInputData(newData);
     };
 
 	const handleInsightsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		const newData: DiaryEntryData = {...inputData, insights: event.target.value};
-		setInputData(newData);
+		const newData: DiaryEntryData = {...props.inputData, insights: event.target.value};
 		props.setInputData(newData);
     };
 
     const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const newValue ={
-            ...inputData.routineTasks,
+            ...props.inputData.routineTasks,
             [event.target.name]: event.target.checked,
         };
-        const newData: DiaryEntryData = {...inputData, routineTasks: newValue};
-		setInputData(newData);
+        const newData: DiaryEntryData = {...props.inputData, routineTasks: newValue};
 		props.setInputData(newData);
     };
 
@@ -110,7 +102,7 @@ export const DiaryEntry: React.FC<DiaryEntryProps> = (props: DiaryEntryProps) =>
 					<FormControlLabel
 						control={
 							<Checkbox
-								checked={inputData.routineTasks[item] ? true : false}
+								checked={props.inputData.routineTasks[item] ? true : false}
 								onChange={handleCheckboxChange}
 								name={item}
 							/>
@@ -128,7 +120,7 @@ export const DiaryEntry: React.FC<DiaryEntryProps> = (props: DiaryEntryProps) =>
                 label="新しい知見"
                 multiline
                 rows={4}
-                value={inputData.insights}
+                value={props.inputData.insights}
                 onChange={handleInsightsChange}
                 variant="outlined"
                 margin="normal"
@@ -137,7 +129,7 @@ export const DiaryEntry: React.FC<DiaryEntryProps> = (props: DiaryEntryProps) =>
                 label="今日の出来事"
                 multiline
                 rows={6}
-                value={inputData.events}
+                value={props.inputData.events}
                 onChange={handleEntryChange}
                 variant="outlined"
                 margin="normal"

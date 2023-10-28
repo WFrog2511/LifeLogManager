@@ -51,20 +51,15 @@ export type ArtworkUploadData = {
 	notes:  string;			// メモ
 };
 type ArtworkUploadProps = {
+	inputData:  ArtworkUploadData;
 	setInputData: (x: ArtworkUploadData) => void; 
 };
 
 export const ArtworkUpload: React.FC<ArtworkUploadProps> = (props: ArtworkUploadProps) => {
-	const [inputData, setInputData] = useState<ArtworkUploadData>({
-		files: [],
-		links: [],
-		notes:  ""
-	});
 	const [previews, setPreviews] = useState<PreviewData[]>([]);
 
-	const handlePetMemoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		const newData: ArtworkUploadData = {...inputData, notes: event.target.value};
-		setInputData(newData);
+	const handleMemoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		const newData: ArtworkUploadData = {...props.inputData, notes: event.target.value};
 		props.setInputData(newData);
 	};
 
@@ -72,7 +67,7 @@ export const ArtworkUpload: React.FC<ArtworkUploadProps> = (props: ArtworkUpload
 		const newFiles = event.target.files;
 		if (newFiles && newFiles.length > 0) {
 			const newFileArray = Array.from(newFiles);
-			const updatedFiles = [...inputData.files, ...newFileArray];
+			const updatedFiles = [...props.inputData.files, ...newFileArray];
 			const updatedPreviews = [
 				...previews,
 				...newFileArray.map(file => ({
@@ -81,8 +76,7 @@ export const ArtworkUpload: React.FC<ArtworkUploadProps> = (props: ArtworkUpload
 				}))
 			];
 
-			const newData: ArtworkUploadData = {...inputData, files: updatedFiles};
-			setInputData(newData);
+			const newData: ArtworkUploadData = {...props.inputData, files: updatedFiles};
 			props.setInputData(newData);
 			setPreviews(updatedPreviews);
 
@@ -91,11 +85,10 @@ export const ArtworkUpload: React.FC<ArtworkUploadProps> = (props: ArtworkUpload
 	};
 
 	const handleImageRemove = (index: number) => {
-		const updatedFiles = inputData.files.filter((_, fileIndex) => fileIndex !== index);
+		const updatedFiles = props.inputData.files.filter((_, fileIndex) => fileIndex !== index);
 		const updatedPreviews = previews.filter((_, previewIndex) => previewIndex !== index);
 
-		const newData: ArtworkUploadData = {...inputData, files: updatedFiles};
-		setInputData(newData);
+		const newData: ArtworkUploadData = {...props.inputData, files: updatedFiles};
 		props.setInputData(newData);
 		setPreviews(updatedPreviews);
 	};
@@ -105,9 +98,8 @@ export const ArtworkUpload: React.FC<ArtworkUploadProps> = (props: ArtworkUpload
 		const newUrl = window.prompt('URLを追加してください');	//TODO: 見栄えの良いモーダルに変える
 		
 		if (newUrl) {
-			const updatedLinks = [...inputData.links, newUrl];
-			const newData: ArtworkUploadData = {...inputData, links: updatedLinks};
-			setInputData(newData);
+			const updatedLinks = [...props.inputData.links, newUrl];
+			const newData: ArtworkUploadData = {...props.inputData, links: updatedLinks};
 			props.setInputData(newData);
 		}
 	};
@@ -125,10 +117,10 @@ export const ArtworkUpload: React.FC<ArtworkUploadProps> = (props: ArtworkUpload
 
 			{previews.map((item, index) => (
 				<ImagePreviewWrapper key={index}>
-					{inputData.files[index].type.startsWith('image') ?  
+					{props.inputData.files[index].type.startsWith('image') ?  
 						<img src={item.url} alt={`Preview ${index}`} style={{ width: '100%', height: 'auto' }} />
 						:
-						inputData.files[index].type.startsWith('video') ?
+						props.inputData.files[index].type.startsWith('video') ?
 						<video controls src={item.url} style={{ width: '100%', height: 'auto' }} />
 						:
 						item.fileType === 'obj' ?
@@ -161,16 +153,16 @@ export const ArtworkUpload: React.FC<ArtworkUploadProps> = (props: ArtworkUpload
                 URL追加
             </Button>
 			
-			{inputData.links.map((item, index) => (
-				<LinkPreview url={item} index={index} inputData={inputData} setInputData={setInputData}/>
+			{props.inputData.links.map((item, index) => (
+				<LinkPreview url={item} index={index} inputData={props.inputData} setInputData={props.setInputData}/>
 			))}
 			
 			<TextField
 				label="メモ"
 				multiline
 				rows={4}
-				value={inputData.notes}
-				onChange={handlePetMemoChange}
+				value={props.inputData.notes}
+				onChange={handleMemoChange}
 				variant="outlined"
 				margin="normal"
 			/>

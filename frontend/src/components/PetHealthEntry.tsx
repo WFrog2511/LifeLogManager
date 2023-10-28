@@ -43,19 +43,16 @@ export type PetHealthEntryData = {
     photos: Array<File>;    // ペットの写真のファイルリスト
 }
 type PetHealthEntryProps = {
+	inputData: PetHealthEntryData;
 	setInputData: (x: PetHealthEntryData) => void; 
 }
 
 export const PetHealthEntry: React.FC<PetHealthEntryProps> = (props: PetHealthEntryProps) => {
-	const [inputData, setInputData] = useState<PetHealthEntryData>({
-		notes: "",
-		photos: []
-	});
+
 	const [previewUrls, setPreviewUrls] = useState<string[]>([]);
 	
 	const handlePetMemoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		const newData: PetHealthEntryData = {...inputData, notes: event.target.value};
-		setInputData(newData);
+		const newData: PetHealthEntryData = {...props.inputData, notes: event.target.value};
 		props.setInputData(newData);
 	};
 
@@ -63,25 +60,23 @@ export const PetHealthEntry: React.FC<PetHealthEntryProps> = (props: PetHealthEn
 		const newFiles = event.target.files;
 		if (newFiles && newFiles.length > 0) {
 			const newFileArray = Array.from(newFiles);
-			const updatedFiles = [...inputData.photos, ...newFileArray];
+			const updatedFiles = [...props.inputData.photos, ...newFileArray];
 			const updatedPreviewUrls = [
 				...previewUrls,
 				...newFileArray.map(file => URL.createObjectURL(file))
 			];
 
-			const newData: PetHealthEntryData = {...inputData, photos: updatedFiles};
-			setInputData(newData);
+			const newData: PetHealthEntryData = {...props.inputData, photos: updatedFiles};
 			props.setInputData(newData);
       		setPreviewUrls(updatedPreviewUrls);
 		}
 	};
 
 	const handleImageRemove = (index: number) => {
-		const updatedFiles = inputData.photos.filter((_, fileIndex) => fileIndex !== index);
+		const updatedFiles = props.inputData.photos.filter((_, fileIndex) => fileIndex !== index);
 		const updatedPreviewUrls = previewUrls.filter((_, urlIndex) => urlIndex !== index);
 
-		const newData: PetHealthEntryData = {...inputData, photos: updatedFiles};
-		setInputData(newData);
+		const newData: PetHealthEntryData = {...props.inputData, photos: updatedFiles};
 		props.setInputData(newData);
 		setPreviewUrls(updatedPreviewUrls);
 	};
@@ -118,7 +113,7 @@ export const PetHealthEntry: React.FC<PetHealthEntryProps> = (props: PetHealthEn
 				label="メモ"
 				multiline
 				rows={4}
-				value={inputData.notes}
+				value={props.inputData.notes}
 				onChange={handlePetMemoChange}
 				variant="outlined"
 				margin="normal"
