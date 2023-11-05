@@ -30,9 +30,9 @@ public class DiaryController {
             @RequestParam("date") String date_str,
             @RequestParam("text") String text,
             @RequestParam("image") MultipartFile imageFile) throws IOException, ParseException {
-        // User user = userRepository.findById(userId).orElseThrow();
+        User user = userRepository.findById(userId).orElseThrow();
         DiaryEntry diaryEntry = new DiaryEntry();
-        // diaryEntry.setUser(user);
+        diaryEntry.setUser(user);
 
         SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date date = sdFormat.parse(date_str);
