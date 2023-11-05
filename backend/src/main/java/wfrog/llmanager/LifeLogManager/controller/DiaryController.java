@@ -10,6 +10,8 @@ import wfrog.llmanager.LifeLogManager.repository.DiaryEntryRepository;
 import wfrog.llmanager.LifeLogManager.repository.UserRepository;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @RestController
@@ -25,15 +27,19 @@ public class DiaryController {
     @PostMapping("/{userId}")
     public DiaryEntry createDiaryEntry(
             @PathVariable Long userId,
-            @RequestParam("date") Date date,
+            @RequestParam("date") String date_str,
             @RequestParam("text") String text,
-            @RequestParam("image") MultipartFile imageFile) throws IOException {
-        User user = userRepository.findById(userId).orElseThrow();
+            @RequestParam("image") MultipartFile imageFile) throws IOException, ParseException {
+        // User user = userRepository.findById(userId).orElseThrow();
         DiaryEntry diaryEntry = new DiaryEntry();
-        diaryEntry.setUser(user);
+        // diaryEntry.setUser(user);
+
+        SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = sdFormat.parse(date_str);
         diaryEntry.setDate(date);
         diaryEntry.setText(text);
         diaryEntry.setImage(imageFile.getBytes());
         return diaryEntryRepository.save(diaryEntry);
+
     }
 }
