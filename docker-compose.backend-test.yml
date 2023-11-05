@@ -4,7 +4,7 @@ services:
   backend:
     build:
       context: ./backend
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.test
     volumes:
       - ./backend:/app
     ports:
@@ -17,15 +17,6 @@ services:
       - db
     networks:
       - backend-network
-
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    volumes:
-      - ./frontend:/app
-    ports:
-      - "3000:3000"
 
   db:
     image: mysql:latest
