@@ -2,11 +2,13 @@ package wfrog.llmanager.LifeLogManager.domain;
 
 import jakarta.persistence.*;
 
+import java.util.Set;
+
 @Entity
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false, unique = true)
@@ -14,6 +16,9 @@ public class User {
 
     @Column(nullable = false)
     private String password;
+
+    @OneToMany(mappedBy = "user")
+    private Set<UserRoutineTask> UserRoutineTaskCheckboxOptions;
 
     // Getters and Setters...
 
