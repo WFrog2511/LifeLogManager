@@ -56,6 +56,22 @@ public class DiaryEntry {
         this.date = date;
     }
 
+    public String getEvents() {
+        return events;
+    }
+
+    public void setEvents(String events) {
+        this.events = events;
+    }
+
+    public String getInsights() {
+        return insights;
+    }
+
+    public void setInsights(String insights) {
+        this.insights = insights;
+    }
+
     // public Set<RoutineTaskStatus> getRoutineTaskStatus() {
     // return routineTaskStatuses;
     // }
