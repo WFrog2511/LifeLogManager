@@ -27,8 +27,11 @@ public class DiaryEntry {
     @Column
     private String insights;
 
-    // @OneToMany(mappedBy = "diaryEntry")
-    // private Set<RoutineTaskStatus> routineTaskStatuses = new HashSet<>();
+    // @ElementCollection
+    // @CollectionTable(name = "string_data_routine_task", joinColumns =
+    // @JoinColumn(name = "string_data_id"))
+    @Column(name = "routine_task", nullable = true)
+    private Set<String> routineTasks = new HashSet<>();
 
     // IDのゲッターとセッター
     public Long getId() {
@@ -72,23 +75,19 @@ public class DiaryEntry {
         this.insights = insights;
     }
 
-    // public Set<RoutineTaskStatus> getRoutineTaskStatus() {
-    // return routineTaskStatuses;
-    // }
+    public Set<String> getRoutineTasks() {
+        return routineTasks;
+    }
 
-    // public void setRoutineTaskStatus(Set<RoutineTaskStatus> routineTaskStatuses)
-    // {
-    // this.routineTaskStatuses = routineTaskStatuses;
-    // }
+    public void setRoutineTasks(Set<String> routineTasks) {
+        this.routineTasks = routineTasks;
+    }
 
-    // // Convenience methods to manage bi-directional relationship
-    // public void addRoutineTaskStatus(RoutineTaskStatus routineTaskStatus) {
-    // routineTaskStatuses.add(routineTaskStatus);
-    // routineTaskStatus.setDiaryEntry(this);
-    // }
+    public void addRoutineTask(String routineTask) {
+        routineTasks.add(routineTask);
+    }
 
-    // public void removeRoutineTaskStatus(RoutineTaskStatus routineTaskStatus) {
-    // routineTaskStatuses.remove(routineTaskStatus);
-    // routineTaskStatus.setDiaryEntry(null);
-    // }
+    public void removeRoutineTask(String routineTask) {
+        routineTasks.remove(routineTask);
+    }
 }

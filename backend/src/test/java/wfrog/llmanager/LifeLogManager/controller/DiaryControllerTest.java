@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.cglib.core.Local;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -16,9 +15,8 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import wfrog.llmanager.LifeLogManager.config.TestConfig;
 import wfrog.llmanager.LifeLogManager.domain.DiaryEntry;
-import wfrog.llmanager.LifeLogManager.domain.RoutineTask;
-import wfrog.llmanager.LifeLogManager.domain.RoutineTaskStatus;
 import wfrog.llmanager.LifeLogManager.domain.User;
+import wfrog.llmanager.LifeLogManager.dto.DiaryDataRequest;
 import wfrog.llmanager.LifeLogManager.service.DiaryService;
 
 import java.time.LocalDate;
@@ -49,55 +47,48 @@ class DiaryControllerTest {
 
     @Test
     void createDiaryEntry() throws Exception {
-        // テスト用のユーザーID、通常はデータベースから取得するか、テスト用に作成する
-        // User testUser = new User();
-        // testUser.setId(1L); // テスト用のID
 
-        // // テスト用のチェックボックスオプション、実際にはデータベースから取得するか、テスト用に作成する
-        // RoutineTask option1 = new RoutineTask();
-        // option1.setId(1L); // テスト用のID
-        // RoutineTask option2 = new RoutineTask();
-        // option2.setId(2L); // テスト用のID
-
-        // // テスト用のDailyCheckboxStatusを設定
-        // RoutineTaskStatus status1 = new RoutineTaskStatus();
-        // status1.setRoutineTask(option1);
-        // status1.setChecked(true);
-
-        // RoutineTaskStatus status2 = new RoutineTaskStatus();
-        // status2.setRoutineTask(option2);
-        // status2.setChecked(false);
-
-        // DailyLogオブジェクトにデータをセットアップ
-        DiaryEntry diaryEntry = new DiaryEntry();
-        // diaryEntry.setUser(testUser);
+        DiaryDataRequest request = new DiaryDataRequest();
+        Long userId = 1L;
         LocalDate date = LocalDate.now();
-        diaryEntry.setDate(LocalDate.now());
-
         String events = "test_events";
-        diaryEntry.setEvents(events);
-
         String insights = "test_insights";
+        Set<String> routineTasks = new HashSet<>();
+        routineTasks.add("task1");
+        routineTasks.add("task2");
+
+        request.setUserId(userId);
+        request.setDate(LocalDate.now());
+        request.setEvents(events);
+        request.setInsights(insights);
+        request.setRoutineTasks(routineTasks);
+
+        DiaryEntry diaryEntry = new DiaryEntry();
+        User user = new User();
+        user.setId(userId);
+        diaryEntry.setUser(user);
+        diaryEntry.setDate(date);
+        diaryEntry.setEvents(events);
         diaryEntry.setInsights(insights);
+        diaryEntry.setRoutineTasks(routineTasks);
 
-        // Set<RoutineTaskStatus> statuses = new HashSet<>();
-        // statuses.add(status1);
-        // statuses.add(status2);
-        // diaryEntry.setRoutineTaskStatus(statuses);
-
-        when(service.saveDailyLog(
+        when(service.saveDiaryEntry(
+                any(Long.class),
                 any(LocalDate.class),
                 any(String.class),
                 any(String.class),
-                any(Long.class)))
+                any()))
                 .thenReturn(diaryEntry);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/diaries")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(TestConfig.objectMapper().writeValueAsString(diaryEntry)))
+                .content(TestConfig.objectMapper().writeValueAsString(request)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.date").value(date.toString()))
                 .andExpect(jsonPath("$.events").value(events.toString()))
-                .andExpect(jsonPath("$.insights").value(insights.toString()));
+                .andExpect(jsonPath("$.insights").value(insights.toString()))
+                .andExpect(jsonPath("$.routineTasks[0]").value(routineTasks.toArray()[0]))
+                .andExpect(jsonPath("$.routineTasks[1]").value(routineTasks.toArray()[1]))
+                .andExpect(jsonPath("$.user.id").value(userId.toString()));
     }
 }

@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.web.servlet.MockMvc;
 
 import wfrog.llmanager.LifeLogManager.config.TestConfig;
-import wfrog.llmanager.LifeLogManager.domain.DiaryEntry;
+import wfrog.llmanager.LifeLogManager.dto.DiaryDataRequest;
 
 import org.springframework.http.MediaType;
 
@@ -17,6 +17,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -27,22 +29,31 @@ public class DiaryIntegrationTest {
 
     @Test
     public void whenPostRequestToDiaryEntry_thenCorrectResponse() throws Exception {
-        DiaryEntry diaryEntry = new DiaryEntry();
+
+        DiaryDataRequest request = new DiaryDataRequest();
+        Long userId = 1L;
         LocalDate date = LocalDate.now();
-        diaryEntry.setDate(date);
-
         String events = "test_events";
-        diaryEntry.setEvents(events);
-
         String insights = "test_insights";
-        diaryEntry.setInsights(insights);
+        Set<String> routineTasks = new HashSet<>();
+        routineTasks.add("task1");
+        routineTasks.add("task2");
+
+        request.setUserId(userId);
+        request.setDate(LocalDate.now());
+        request.setEvents(events);
+        request.setInsights(insights);
+        request.setRoutineTasks(routineTasks);
 
         mockMvc.perform(post("/api/diaries")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(TestConfig.objectMapper().writeValueAsString(diaryEntry)))
+                .content(TestConfig.objectMapper().writeValueAsString(request)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.date").value(date.toString()))
                 .andExpect(jsonPath("$.events").value(events.toString()))
-                .andExpect(jsonPath("$.insights").value(insights.toString()));
+                .andExpect(jsonPath("$.insights").value(insights.toString()))
+                .andExpect(jsonPath("$.routineTasks[0]").value(routineTasks.toArray()[0]))
+                .andExpect(jsonPath("$.routineTasks[1]").value(routineTasks.toArray()[1]))
+                .andExpect(jsonPath("$.user.id").value(userId.toString()));
     }
 }

@@ -1,6 +1,7 @@
 package wfrog.llmanager.LifeLogManager.service;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +23,8 @@ public class DiaryService {
     }
 
     @Transactional
-    public DiaryEntry saveDailyLog(LocalDate date, String events, String insights, Long userId) {
+    public DiaryEntry saveDiaryEntry(Long userId, LocalDate date, String events, String insights,
+            Set<String> routineTasks) {
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
 
         DiaryEntry dailyLog = new DiaryEntry();
@@ -30,6 +32,7 @@ public class DiaryService {
         dailyLog.setDate(date);
         dailyLog.setEvents(events);
         dailyLog.setInsights(insights);
+        dailyLog.setRoutineTasks(routineTasks);
 
         return dailyLogRepository.save(dailyLog);
     }

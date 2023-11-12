@@ -1,12 +1,14 @@
 package wfrog.llmanager.LifeLogManager.dto;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 public class DiaryDataRequest {
     private String events;
     private String insights;
     private Long userId;
     private LocalDate date;
+    private Set<String> routineTasks;
 
     public String getEvents() {
         return events;
@@ -39,4 +41,13 @@ public class DiaryDataRequest {
     public void setDate(LocalDate date) {
         this.date = date;
     }
+
+    public Set<String> getRoutineTasks() {
+        return routineTasks;
+    }
+
+    public void setRoutineTasks(Set<String> routineTasks) {
+        this.routineTasks = routineTasks;
+    }
+
 }
