@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 public class User {
 
@@ -14,13 +16,12 @@ public class User {
     @Column(nullable = false, unique = true)
     private String username;
 
+    @JsonIgnore
     @Column(nullable = false)
     private String password;
 
-    @OneToMany(mappedBy = "user")
-    private Set<UserRoutineTask> UserRoutineTaskCheckboxOptions;
-
-    // Getters and Setters...
+    // @OneToMany(mappedBy = "user")
+    // private Set<UserRoutineTask> UserRoutineTaskCheckboxOptions;
 
     public Long getId() {
         return id;
@@ -45,4 +46,14 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    // public Set<UserRoutineTask> getUserRoutineTaskCheckboxOptions() {
+    // return UserRoutineTaskCheckboxOptions;
+    // }
+
+    // public void setUserRoutineTaskCheckboxOptions(Set<UserRoutineTask>
+    // userRoutineTaskCheckboxOptions) {
+    // UserRoutineTaskCheckboxOptions = userRoutineTaskCheckboxOptions;
+    // }
+
 }
