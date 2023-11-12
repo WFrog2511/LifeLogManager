@@ -26,10 +26,15 @@ public class DiaryE2ETest {
     }
 
     // @Test
-    // void testCreateDiaryLog() throws JsonProcessingException {
+    // void testCreateDiaryEntry() throws JsonProcessingException {
     // DiaryEntry diaryEntry = new DiaryEntry();
     // LocalDate date = LocalDate.now();
     // diaryEntry.setDate(date);
+    // String events = "test_events";
+    // diaryEntry.setEvents(events);
+
+    // String insights = "test_insights";
+    // diaryEntry.setInsights(insights);
 
     // Response response = RestAssured.given()
     // .contentType("application/json")
@@ -39,6 +44,8 @@ public class DiaryE2ETest {
     // .then()
     // .statusCode(201)
     // .body("date", equalTo(date.toString()))
+    // .body("events", equalTo(events)
+    // .body("insights", equalTo(insights)
     // .extract()
     // .response();
 

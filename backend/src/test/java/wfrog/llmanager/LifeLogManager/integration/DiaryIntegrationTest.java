@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -27,15 +26,23 @@ public class DiaryIntegrationTest {
     private MockMvc mockMvc;
 
     @Test
-    public void whenPostRequestToStringDataAndValidString_thenCorrectResponse() throws Exception {
+    public void whenPostRequestToDiaryEntry_thenCorrectResponse() throws Exception {
         DiaryEntry diaryEntry = new DiaryEntry();
         LocalDate date = LocalDate.now();
         diaryEntry.setDate(date);
+
+        String events = "test_events";
+        diaryEntry.setEvents(events);
+
+        String insights = "test_insights";
+        diaryEntry.setInsights(insights);
 
         mockMvc.perform(post("/api/diaries")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(TestConfig.objectMapper().writeValueAsString(diaryEntry)))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.date").value(date.toString()));
+                .andExpect(jsonPath("$.date").value(date.toString()))
+                .andExpect(jsonPath("$.events").value(events.toString()))
+                .andExpect(jsonPath("$.insights").value(insights.toString()));
     }
 }

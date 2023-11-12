@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -73,6 +72,13 @@ class DiaryControllerTest {
         // diaryEntry.setUser(testUser);
         LocalDate date = LocalDate.now();
         diaryEntry.setDate(LocalDate.now());
+
+        String events = "test_events";
+        diaryEntry.setEvents(events);
+
+        String insights = "test_insights";
+        diaryEntry.setInsights(insights);
+
         // Set<RoutineTaskStatus> statuses = new HashSet<>();
         // statuses.add(status1);
         // statuses.add(status2);
@@ -84,6 +90,8 @@ class DiaryControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(TestConfig.objectMapper().writeValueAsString(diaryEntry)))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.date").value(date.toString()));
+                .andExpect(jsonPath("$.date").value(date.toString()))
+                .andExpect(jsonPath("$.events").value(events.toString()))
+                .andExpect(jsonPath("$.insights").value(insights.toString()));
     }
 }

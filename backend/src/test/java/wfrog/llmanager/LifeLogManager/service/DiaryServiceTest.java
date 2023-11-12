@@ -28,11 +28,17 @@ public class DiaryServiceTest {
     }
 
     @Test
-    public void whenAddStringData_thenStringDataShouldBeReturned() {
+    public void whenCreateDiaryEntry_thenDiaryEntryShouldBeReturned() {
 
         DiaryEntry diaryEntry = new DiaryEntry();
         LocalDate date = LocalDate.now();
         diaryEntry.setDate(date);
+
+        String events = "test_events";
+        diaryEntry.setEvents(events);
+
+        String insights = "test_insights";
+        diaryEntry.setInsights(insights);
 
         when(repository.save(any(DiaryEntry.class))).thenReturn(diaryEntry);
 
