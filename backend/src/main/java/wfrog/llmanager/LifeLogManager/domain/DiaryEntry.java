@@ -3,7 +3,8 @@ package wfrog.llmanager.LifeLogManager.domain;
 import jakarta.persistence.*;
 
 import java.util.Set;
-import java.util.Date;
+import java.time.LocalDate;
+import java.util.HashSet;
 
 // 日誌情報を記録するため
 @Entity
@@ -13,12 +14,12 @@ public class DiaryEntry {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    // @ManyToOne
+    // @JoinColumn(name = "user_id", nullable = false)
+    // private User user;
 
     @Column
-    private Date date;
+    private LocalDate date;
 
     @Column
     private String events;
@@ -26,23 +27,52 @@ public class DiaryEntry {
     @Column
     private String insights;
 
-    @OneToMany(mappedBy = "diaryEntry")
-    private Set<RoutineTaskStatus> routineTaskStatus;
+    // @OneToMany(mappedBy = "diaryEntry")
+    // private Set<RoutineTaskStatus> routineTaskStatuses = new HashSet<>();
 
-    public void setUser(User user) {
-        this.user = user;
+    // IDのゲッターとセッター
+    public Long getId() {
+        return id;
     }
 
-    public void setDate(Date date) {
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    // Userのゲッターとセッター
+    // public User getUser() {
+    // return user;
+    // }
+
+    // public void setUser(User user) {
+    // this.user = user;
+    // }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
-    public void setEvents(String events) {
-        this.events = events;
-    }
+    // public Set<RoutineTaskStatus> getRoutineTaskStatus() {
+    // return routineTaskStatuses;
+    // }
 
-    public void setInsights(String insights) {
-        this.insights = insights;
-    }
+    // public void setRoutineTaskStatus(Set<RoutineTaskStatus> routineTaskStatuses)
+    // {
+    // this.routineTaskStatuses = routineTaskStatuses;
+    // }
 
+    // // Convenience methods to manage bi-directional relationship
+    // public void addRoutineTaskStatus(RoutineTaskStatus routineTaskStatus) {
+    // routineTaskStatuses.add(routineTaskStatus);
+    // routineTaskStatus.setDiaryEntry(this);
+    // }
+
+    // public void removeRoutineTaskStatus(RoutineTaskStatus routineTaskStatus) {
+    // routineTaskStatuses.remove(routineTaskStatus);
+    // routineTaskStatus.setDiaryEntry(null);
+    // }
 }

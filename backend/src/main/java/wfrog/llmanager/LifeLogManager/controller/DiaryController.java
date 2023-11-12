@@ -1,45 +1,24 @@
 package wfrog.llmanager.LifeLogManager.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import org.springframework.web.multipart.MultipartFile;
 import wfrog.llmanager.LifeLogManager.domain.DiaryEntry;
-import wfrog.llmanager.LifeLogManager.domain.User;
-import wfrog.llmanager.LifeLogManager.repository.DiaryEntryRepository;
-import wfrog.llmanager.LifeLogManager.repository.UserRepository;
-
-import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import wfrog.llmanager.LifeLogManager.service.DiaryService;
 
 @RestController
 @RequestMapping("/api/diaries")
 public class DiaryController {
+    private final DiaryService diaryService;
 
-    @Autowired
-    private DiaryEntryRepository diaryEntryRepository;
+    public DiaryController(DiaryService diaryService) {
+        this.diaryService = diaryService;
+    }
 
-    @Autowired
-    private UserRepository userRepository;
-
-    @PostMapping("/{userId}")
-    public DiaryEntry createDiaryEntry(
-            @PathVariable Long userId,
-            @RequestParam("date") String date_str,
-            @RequestParam("text") String text,
-            @RequestParam("image") MultipartFile imageFile) throws IOException, ParseException {
-        User user = userRepository.findById(userId).orElseThrow();
-        DiaryEntry diaryEntry = new DiaryEntry();
-        diaryEntry.setUser(user);
-
-        SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Date date = sdFormat.parse(date_str);
-        diaryEntry.setDate(date);
-        diaryEntry.setText(text);
-        diaryEntry.setImage(imageFile.getBytes());
-        return diaryEntryRepository.save(diaryEntry);
-
+    @PostMapping
+    public ResponseEntity<DiaryEntry> createDailyLog(@RequestBody DiaryEntry diaryEntry) {
+        DiaryEntry savedDailyLog = diaryService.saveDailyLog(diaryEntry);
+        return new ResponseEntity<>(savedDailyLog, HttpStatus.CREATED);
     }
 }
