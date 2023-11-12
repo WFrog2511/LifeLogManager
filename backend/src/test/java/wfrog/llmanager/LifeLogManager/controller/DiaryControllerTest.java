@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.cglib.core.Local;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -84,7 +85,12 @@ class DiaryControllerTest {
         // statuses.add(status2);
         // diaryEntry.setRoutineTaskStatus(statuses);
 
-        when(service.saveDailyLog(any(DiaryEntry.class))).thenReturn(diaryEntry);
+        when(service.saveDailyLog(
+                any(LocalDate.class),
+                any(String.class),
+                any(String.class),
+                any(Long.class)))
+                .thenReturn(diaryEntry);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/diaries")
                 .contentType(MediaType.APPLICATION_JSON)

@@ -42,7 +42,11 @@ public class DiaryServiceTest {
 
         when(repository.save(any(DiaryEntry.class))).thenReturn(diaryEntry);
 
-        DiaryEntry created = service.saveDailyLog(diaryEntry);
+        DiaryEntry created = service.saveDailyLog(
+                any(LocalDate.class),
+                any(String.class),
+                any(String.class),
+                any(Long.class));
 
         assertThat(created.getDate()).isEqualTo(date);
     }
