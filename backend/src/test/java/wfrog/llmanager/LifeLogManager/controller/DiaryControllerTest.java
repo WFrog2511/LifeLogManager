@@ -1,60 +1,89 @@
 package wfrog.llmanager.LifeLogManager.controller;
 
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import wfrog.llmanager.LifeLogManager.domain.User;
-import wfrog.llmanager.LifeLogManager.repository.DiaryEntryRepository;
-import wfrog.llmanager.LifeLogManager.repository.UserRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
-import java.util.Optional;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import wfrog.llmanager.LifeLogManager.config.TestConfig;
+import wfrog.llmanager.LifeLogManager.domain.DiaryEntry;
+import wfrog.llmanager.LifeLogManager.domain.RoutineTask;
+import wfrog.llmanager.LifeLogManager.domain.RoutineTaskStatus;
+import wfrog.llmanager.LifeLogManager.domain.User;
+import wfrog.llmanager.LifeLogManager.service.DiaryService;
+
+import java.time.LocalDate;
+import java.util.Set;
+import java.util.HashSet;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(DiaryController.class)
 @AutoConfigureRestDocs(outputDir = "target/snippets")
+@Import(TestConfig.class)
 class DiaryControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    private DiaryEntryRepository diaryEntryRepository;
+    private DiaryService service;
 
-    @MockBean
-    private UserRepository userRepository;
+    public ObjectMapper objectMapper() {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+        return mapper;
+    }
 
     @Test
     void createDiaryEntry() throws Exception {
-        long user_id = 1L;
+        // テスト用のユーザーID、通常はデータベースから取得するか、テスト用に作成する
+        // User testUser = new User();
+        // testUser.setId(1L); // テスト用のID
 
-        // Create a dummy user
-        User user = new User();
-        user.setId(user_id);
-        user.setUsername("testuser");
-        user.setPassword("testpassword");
+        // // テスト用のチェックボックスオプション、実際にはデータベースから取得するか、テスト用に作成する
+        // RoutineTask option1 = new RoutineTask();
+        // option1.setId(1L); // テスト用のID
+        // RoutineTask option2 = new RoutineTask();
+        // option2.setId(2L); // テスト用のID
 
-        // Setup the userRepository mock to return the dummy user when findById is
-        // called
-        Mockito.when(userRepository.findById(user_id)).thenReturn(Optional.of(user));
+        // // テスト用のDailyCheckboxStatusを設定
+        // RoutineTaskStatus status1 = new RoutineTaskStatus();
+        // status1.setRoutineTask(option1);
+        // status1.setChecked(true);
 
-        // MockMultipartFile for testing file upload
-        MockMultipartFile imageFile = new MockMultipartFile("image", "image.jpg", "image/jpeg",
-                "image data".getBytes());
+        // RoutineTaskStatus status2 = new RoutineTaskStatus();
+        // status2.setRoutineTask(option2);
+        // status2.setChecked(false);
 
-        // Perform the POST request
-        mockMvc.perform(MockMvcRequestBuilders.multipart("/api/diaries/" + Long.toString(user_id))
-                .file(imageFile)
-                .param("date", "2023-10-28")
-                .param("text", "Sample diary entry"))
-                .andExpect(status().isOk())
-                .andDo(document("create-diary-entry"));
+        // DailyLogオブジェクトにデータをセットアップ
+        DiaryEntry diaryEntry = new DiaryEntry();
+        // diaryEntry.setUser(testUser);
+        LocalDate date = LocalDate.now();
+        diaryEntry.setDate(LocalDate.now());
+        // Set<RoutineTaskStatus> statuses = new HashSet<>();
+        // statuses.add(status1);
+        // statuses.add(status2);
+        // diaryEntry.setRoutineTaskStatus(statuses);
+
+        when(service.saveDailyLog(any(DiaryEntry.class))).thenReturn(diaryEntry);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/diaries")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(TestConfig.objectMapper().writeValueAsString(diaryEntry)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.date").value(date.toString()));
     }
 }
